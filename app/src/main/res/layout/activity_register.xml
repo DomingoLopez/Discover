@@ -21,19 +21,38 @@
         app:srcCompat="@mipmap/ic_launcher_foreground" />
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_register"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/orange_solid"
-        android:text="@string/btn_login"
+        android:text="@string/btn_register"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintEnd_toEndOf="@+id/password_register"
+        app:layout_constraintStart_toStartOf="@+id/password_register"
+        app:layout_constraintTop_toBottomOf="@+id/password_register" />
+
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/name_register"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="78dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/orange_solid"
+        android:ems="10"
+        android:hint="Nombre de usuario"
+        android:inputType="text"
+        android:textColorHint="@color/orange_light"
+        android:textColorLink="@color/orange_solid"
+        app:layout_constraintBottom_toTopOf="@+id/email_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <EditText
+        android:id="@+id/email_register"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginTop="140dp"
@@ -44,11 +63,12 @@
         android:textColorHint="@color/orange_light"
         android:textColorLink="@color/orange_solid"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/password_register"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
@@ -57,9 +77,9 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:textColorHint="@color/orange_light"
-        app:layout_constraintEnd_toEndOf="@+id/email"
-        app:layout_constraintStart_toStartOf="@+id/email"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        app:layout_constraintEnd_toEndOf="@+id/email_register"
+        app:layout_constraintStart_toStartOf="@+id/email_register"
+        app:layout_constraintTop_toBottomOf="@+id/email_register" />
 
     <TextView
         android:id="@+id/textView"
@@ -74,15 +94,15 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <TextView
-        android:id="@+id/tvRegister"
+        android:id="@+id/tvLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Si aún no tienes cuenta, regístrate aquí"
+        android:text="Si ya tienes cuenta, inicia sesión aquí"
         android:textColor="@color/orange_solid"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/btn_login"
-        app:layout_constraintStart_toStartOf="@+id/btn_login"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+        app:layout_constraintEnd_toEndOf="@+id/btn_register"
+        app:layout_constraintStart_toStartOf="@+id/btn_register"
+        app:layout_constraintTop_toBottomOf="@+id/btn_register" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
