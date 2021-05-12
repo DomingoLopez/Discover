@@ -31,11 +31,14 @@ public class AuthorRepository{
 
     public AuthorEntity getAuthorById(int id){return authorDao.getAuthorById(id);}
 
+    public AuthorEntity getAuthorByUserName(String username){return authorDao.getAuthorByUserName(username);}
+
     public void deleteAllAuthors(){
         authorDao.deleteAll();}
 
     public void deleteById(int id){
-        authorDao.deleteById(id);}
+        authorDao.deleteById(id);
+    }
 
 
     public void insertAuthor(AuthorEntity author){

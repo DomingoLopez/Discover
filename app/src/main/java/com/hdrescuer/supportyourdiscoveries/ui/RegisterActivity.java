@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hdrescuer.supportyourdiscoveries.R;
+import com.hdrescuer.supportyourdiscoveries.common.Constants;
+import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.AuthorRepository;
+import com.hdrescuer.supportyourdiscoveries.db.entity.AuthorEntity;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -20,6 +23,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     EditText password;
     TextView tvlogin;
 
+    AuthorRepository authorRepository;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
 
         getSupportActionBar().hide();
-
+        this.authorRepository = new AuthorRepository(getApplication());
 
         findViews();
         events();
@@ -53,10 +58,30 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         switch (v.getId()){
             case R.id.btn_register:
-                Intent i_register = new Intent(RegisterActivity.this, HomeActivity.class);
-                startActivity(i_register);
-                finish();
-                break;
+
+                if(validateForm()){
+
+                    this.authorRepository.insertAuthor(new AuthorEntity(
+                            this.username.getText().toString(),
+                            this.email.getText().toString(),
+                            this.password.getText().toString()
+                    ));
+
+                    AuthorEntity authorCreated = this.authorRepository.getAuthorByUserName(this.username.getText().toString());
+
+                    Constants.ID = authorCreated.id;
+                    Constants.USERNAME = authorCreated.username;
+                    Constants.EMAIL = authorCreated.getEmail();
+                    Constants.PHOTO = authorCreated.getMain_photo_url();
+
+                    Intent i_register = new Intent(RegisterActivity.this, HomeActivity.class);
+                    startActivity(i_register);
+                    finish();
+                    break;
+                }
+
+
+
 
             case R.id.tvLogin:
 
@@ -66,5 +91,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 break;
         }
+    }
+
+
+    boolean validateForm(){
+
+        boolean valido = false;
+
+        if(this.username.getText().toString().isEmpty())
+            this.username.setError("Nombre de usuario requerido");
+        else if(this.email.getText().toString().isEmpty())
+            this.email.setError("Email requerido");
+        else if(this.password.getText().toString().isEmpty())
+            this.password.setError("Contraseña requerida");
+        else
+            valido = true;
+
+
+        return valido;
     }
 }

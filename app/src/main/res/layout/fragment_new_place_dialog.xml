@@ -4,8 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ui.myplaces.NewPlaceDialogFragment">
+    tools:context=".ui.ui.myplaces.createplace.NewPlaceDialogFragment">
 
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager_img_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.viewpager2.widget.ViewPager2>
 
     <ImageButton
         android:id="@+id/btnAddPlace"
@@ -14,7 +24,7 @@
         android:layout_marginStart="90dp"
 
         android:layout_marginTop="30dp"
-        android:background="@color/orange_light"
+        android:background="@color/white"
         android:scaleX="2"
         android:scaleY="2"
         android:src="@drawable/checkok"
@@ -22,25 +32,25 @@
         app:layout_constraintTop_toBottomOf="@+id/new_place_description" />
 
 
-
     <EditText
         android:id="@+id/new_place_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="132dp"
         android:layout_marginRight="10dp"
         android:backgroundTint="@color/orange_solid"
         android:ems="10"
         android:hint="Título"
-        android:nextFocusDown="@+id/new_place_description"
         android:inputType="text"
+        android:nextFocusDown="@+id/new_place_description"
         android:textColor="@color/black"
         android:textColorHint="@color/orange_mediumd"
         android:textColorLink="@color/orange_solid"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_place" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_add_images" />
 
     <EditText
         android:id="@+id/new_place_description"
@@ -72,26 +82,44 @@
 
         android:layout_marginTop="30dp"
         android:layout_marginEnd="90dp"
-        android:background="@color/orange_light"
+        android:background="@color/white"
         android:scaleX="2"
         android:scaleY="2"
         android:src="@drawable/ic_baseline_cancel_24"
         app:layout_constraintEnd_toEndOf="@+id/new_place_description"
         app:layout_constraintTop_toBottomOf="@+id/new_place_description" />
 
+    <Button
+        android:id="@+id/btn_add_images"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:text="Añadir imágenes"
+        app:icon="@drawable/ic_baseline_add_a_photo_24"
+        app:layout_constraintStart_toStartOf="@+id/viewpager_img_gallery"
+        app:layout_constraintTop_toBottomOf="@+id/viewpager_img_gallery" />
+
     <ImageView
-        android:id="@+id/img_place"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
+        android:id="@+id/btn_delete_photo"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_baseline_cancel_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:tag="empty"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_geolocalizar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/color_green"
+        android:text="Geolocalizar"
+        app:icon="@drawable/ic_baseline_location_on_24"
+        app:layout_constraintStart_toStartOf="@+id/btn_add_images"
+        app:layout_constraintTop_toBottomOf="@+id/btn_add_images" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

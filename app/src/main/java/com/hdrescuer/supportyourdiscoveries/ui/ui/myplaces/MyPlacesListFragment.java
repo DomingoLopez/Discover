@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.data.LatestPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
+import com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace.NewPlaceDialogFragment;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.places.LatestPlacesRecyclerView;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
 

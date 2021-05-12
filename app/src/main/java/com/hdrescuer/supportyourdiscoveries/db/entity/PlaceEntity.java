@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.time.Instant;
+import java.util.ArrayList;
+
 @Entity(tableName = "PLACE")
 public class PlaceEntity {
 
@@ -12,15 +15,26 @@ public class PlaceEntity {
 
 
     public String title;
-    Double rating;
+    public String description;
+    double rating;
     public int author_id;
-    public String main_photo_url;
+    public ArrayList<String> photo_paths;
+    public String instant;
+    double latitud;
+    double longitud;
+    String address;
 
-    public PlaceEntity(String title, Double rating, int author_id, String main_photo_url) {
+
+    public PlaceEntity(String title, String description, double rating, int author_id, ArrayList<String> photo_paths, String instant, double latitud, double longitud, String address) {
         this.title = title;
+        this.description = description;
         this.rating = rating;
         this.author_id = author_id;
-        this.main_photo_url = main_photo_url;
+        this.photo_paths = photo_paths;
+        this.instant = instant;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.address = address;
     }
 
     public int getId() {
@@ -39,11 +53,19 @@ public class PlaceEntity {
         this.title = title;
     }
 
-    public Double getRating() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -55,11 +77,43 @@ public class PlaceEntity {
         this.author_id = author_id;
     }
 
-    public String getMain_photo_url() {
-        return main_photo_url;
+    public ArrayList<String> getPhoto_paths() {
+        return photo_paths;
     }
 
-    public void setMain_photo_url(String main_photo_url) {
-        this.main_photo_url = main_photo_url;
+    public void setPhoto_paths(ArrayList<String> photo_paths) {
+        this.photo_paths = photo_paths;
+    }
+
+    public String getInstant() {
+        return instant;
+    }
+
+    public void setInstant(String instant) {
+        this.instant = instant;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

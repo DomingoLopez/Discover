@@ -29,6 +29,9 @@ public interface AuthorDao {
     @Query("SELECT * FROM AUTHOR WHERE id = :id")
     AuthorEntity getAuthorById(int id);
 
+    @Query("SELECT * FROM AUTHOR WHERE username = :username")
+    AuthorEntity getAuthorByUserName(String username);
+
     @Query("SELECT * FROM PLACE")
     List<AuthorEntity> getAllAuthors();
 

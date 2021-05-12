@@ -1,7 +1,10 @@
-package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces;
+package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -16,9 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.hdrescuer.supportyourdiscoveries.BuildConfig;
 import com.hdrescuer.supportyourdiscoveries.R;
+import com.hdrescuer.supportyourdiscoveries.common.Constants;
 import com.hdrescuer.supportyourdiscoveries.common.MyApp;
+import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.PlaceRepository;
+import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 
 
 import android.os.Bundle;
@@ -26,11 +34,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -41,6 +54,9 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
@@ -55,11 +71,20 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     EditText title;
     EditText description;
 
-    Bitmap tmp;
+    Button add_images;
+    Button btn_geolocalizar;
 
+    //ViewPager
+    ViewPager2 viewPager;
+    //Boton eliminar foto
+    ImageView btn_delete_photo;
+
+    //Array de paths de las imágenes
+    ArrayList<String> img_paths;
     String currentPhotoPath;
 
 
+    PlaceRepository placeRepository;
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -75,6 +100,8 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_SupportYourDiscoveries_FullScreenDialogStyle);
 
+        this.img_paths = new ArrayList<>();
+        this.placeRepository = new PlaceRepository(MyApp.getInstance());
 
     }
 
@@ -93,17 +120,41 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        this.btn_delete_photo.setVisibility(View.INVISIBLE);
+        this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(),this.img_paths));
+
+
+    }
 
     private void findViews(View view) {
 
-        this.img_place = view.findViewById(R.id.img_place);
-        this.img_place.setOnClickListener(this);
+        //ViewPager
+        this.viewPager = view.findViewById(R.id.viewpager_img_gallery);
+
+
+        this.btn_delete_photo = view.findViewById(R.id.btn_delete_photo);
+        this.btn_delete_photo.setOnClickListener(this);
+
+
+        this.btn_geolocalizar = view.findViewById(R.id.btn_geolocalizar);
+        this.btn_geolocalizar.setOnClickListener(this);
+
+
+
+        this.add_images = view.findViewById(R.id.btn_add_images);
+        this.add_images.setOnClickListener(this);
 
         this.btnAddPlace = view.findViewById(R.id.btnAddPlace);
         this.btnAddPlace.setOnClickListener(this);
 
         this.btnClose = view.findViewById(R.id.btnClose);
         this.btnClose.setOnClickListener(this);
+
+
 
         this.title = view.findViewById(R.id.new_place_title);
         this.description = view.findViewById(R.id.new_place_description);
@@ -115,10 +166,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
      */
     private void setFormValues() {
 
-        Glide.with(this)
-                .load(R.mipmap.img_no_img_foreground)
-                .centerCrop()
-                .into(this.img_place);
+
     }
 
 
@@ -127,7 +175,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.img_place:
+            case R.id.btn_add_images:
 
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -155,21 +203,64 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
                 break;
 
+            case R.id.btn_delete_photo:
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setMessage("¿Desea elimininar la instantánea?");
+
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        int position =viewPager.getCurrentItem();
+                        img_paths.remove(position);
+
+                        if(img_paths.size() == 0)
+                            btn_delete_photo.setVisibility(View.INVISIBLE);
+
+                        viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(),img_paths));
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
             case R.id.btnAddPlace:
 
-                File img = null;
 
                 if(validateFields()) {
-                   galleryAddPic();
-
-                    if(img != null)
-                        Log.i("PATH",img.getAbsolutePath());
-
+                   //galleryAddPic();
+                    savePlaceToDB();
                 }
-
+                getDialog().dismiss();
                 break;
 
         }
+
+    }
+
+
+
+    private void savePlaceToDB() {
+
+        this.placeRepository.insertPlace(new PlaceEntity(
+                this.title.getText().toString(),
+                this.description.getText().toString(),
+                0.0f,
+                Constants.ID,
+                this.img_paths,
+                Clock.systemUTC().instant().toString(),
+                0.0,
+                0.0,
+                "Sin dirección"
+        ));
 
     }
 
@@ -210,8 +301,8 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             this.title.setError("Título requerido");
         else if(this.description.getText().toString().isEmpty())
             this.description.setError("Añade una descripción");
-        else if(this.img_place.getTag().equals("empty"))
-            Toast.makeText(this.requireActivity(), "Debes añadir una foto al lugar", Toast.LENGTH_SHORT).show();
+        else if(this.img_paths.size()==0)
+            Toast.makeText(this.requireActivity(), "Debes añadir alguna foto del lugar", Toast.LENGTH_SHORT).show();
         else
             valido = true;
 
@@ -227,21 +318,63 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         if(requestCode == REQUEST_IMAGE_CAPTURE){
             if(resultCode == RESULT_OK){
 
-                //Obtenemos la foto realizada
-                /*Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                this.tmp = imageBitmap;
+
+                if(this.btn_delete_photo.getVisibility() == View.INVISIBLE)
+                    this.btn_delete_photo.setVisibility(View.VISIBLE);
+
+                this.img_paths.add(this.currentPhotoPath);
+                this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(),this.img_paths));
 
 
-                this.img_place.setTag("img_añadida");*/
-
-                File file = new File(this.currentPhotoPath);
-
-                Glide.with(this)
-                        .load(this.currentPhotoPath)
-                        .centerCrop()
-                        .into(this.img_place);
             }
         }
     }
+
+
+
+
+
+    private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
+
+        int num_img;
+        ArrayList<String> paths_to_img;
+
+        public ScreenSlidePagerAdapter(FragmentActivity fa, ArrayList<String> img_paths) {
+            super(fa);
+            this.paths_to_img = new ArrayList<>();
+            if(img_paths.size() != 0) {
+                this.num_img = img_paths.size();
+            }else{
+                this.num_img = 1;
+            }
+
+            this.paths_to_img = img_paths;
+
+        }
+
+        @Override
+        public Fragment createFragment(int position) {
+
+            String path = "";
+            if(this.paths_to_img.size() == 0){
+                path = "default";
+            }else{
+                path = this.paths_to_img.get(position);
+            }
+
+            return new ScreenSlidePageFragment(path);
+        }
+
+        @Override
+        public int getItemCount() {
+            return num_img;
+        }
+    }
+
+
+
+
+
+
+
 }

@@ -29,14 +29,14 @@
     <style name="Theme.SupportYourDiscoveries.FullScreenDialogStyle" parent ="Theme.AppCompat.Dialog">
         <item name="colorPrimary">@color/orange_solid</item>
         <item name="colorPrimaryVariant">@color/orange_mediumd</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/orange_solid</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/orange_mediumd</item>
 
 
         <!--Estilos para pantalla completa-->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@color/orange_light</item>
+        <item name="android:windowBackground">@color/white</item>
 
     </style>
 
