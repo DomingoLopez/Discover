@@ -1,4 +1,4 @@
-package com.hdrescuer.supportyourdiscoveries.ui.ui.photo;
+package com.hdrescuer.supportyourdiscoveries.ui.ui.places;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,21 +8,21 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hdrescuer.supportyourdiscoveries.R;
-import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
+import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class MyPlacesRecyclerView extends RecyclerView.Adapter<MyPlacesRecyclerView.ViewHolder> {
+public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesRecyclerView.ViewHolder> {
 
     private List<PlaceEntity> mValues;
     private Context ctx;
     final private ListItemClickListener mOnClickListener;
     final private DateFormat dateFormat;
 
-    public MyPlacesRecyclerView(Context contexto, List<PlaceEntity> items, ListItemClickListener onClickListener) {
+    public LatestPlacesRecyclerView(Context contexto, List<PlaceEntity> items, ListItemClickListener onClickListener) {
         this.ctx = contexto;
         this.mValues = items;
         this.mOnClickListener = onClickListener;

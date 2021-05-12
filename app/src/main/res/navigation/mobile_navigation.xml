@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.tendencias.LatestPlacesListFragment"
+        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.places.LatestPlacesListFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_latest_places" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.photo.MyPlacesListFragment"
+        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.MyPlacesListFragment"
         android:label="@string/title_photo"
         tools:layout="@layout/fragment_my_places" />
 

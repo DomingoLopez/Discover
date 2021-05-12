@@ -1,4 +1,4 @@
-package com.hdrescuer.supportyourdiscoveries.ui.ui.photo;
+package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,10 +11,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.data.LatestPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
-import com.hdrescuer.supportyourdiscoveries.ui.ui.tendencias.LatestPlacesRecyclerView;
+import com.hdrescuer.supportyourdiscoveries.ui.ui.places.LatestPlacesRecyclerView;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
 
 import java.util.List;
@@ -31,6 +32,8 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
     LatestPlacesRecyclerView adapter;
     List<PlaceEntity> placeEntityList;
     LatestPlacesListViewModel latestPlacesListViewModel;
+
+    FloatingActionButton btn;
 
     boolean alreadyCreated = false;
 
@@ -106,7 +109,8 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
 
 
     private void findViews(View view) {
-
+        this.btn = view.findViewById(R.id.btn_add_place);
+        this.btn.setOnClickListener(this);
     }
 
 
@@ -139,7 +143,15 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
     @Override
     public void onClick(View view) {
 
+        switch (view.getId()){
 
+            case R.id.btn_add_place:
+                NewPlaceDialogFragment dialog = new NewPlaceDialogFragment();
+                dialog.show(this.getActivity().getSupportFragmentManager(), "NewPlaceFragment");
+
+                break;
+
+        }
 
 
     }

@@ -5,11 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ui.photo.MyPlacesListFragment">
+    tools:context=".ui.ui.myplaces.MyPlacesListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_my_places"
-        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.photo.MyPlacesListFragment"
+        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.MyPlacesListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentTop="true"
@@ -27,10 +27,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.291"
-        tools:context=".ui.ui.photo.MyPlacesListFragment"
+        tools:context=".ui.ui.myplaces.MyPlacesListFragment"
         tools:listitem="@layout/fragment_place" />
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="76dp"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_add_a_photo_24"
+        android:tint="@color/white"
+        app:backgroundTint="@color/orange_solid"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.833"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

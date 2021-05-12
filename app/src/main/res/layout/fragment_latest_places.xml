@@ -5,11 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ui.tendencias.LatestPlacesListFragment">
+    tools:context=".ui.ui.places.LatestPlacesListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
-        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.tendencias.LatestPlacesListFragment"
+        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.places.LatestPlacesListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentTop="true"
@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.291"
-        tools:context=".ui.ui.tendencias.LatestPlacesListFragment"
+        tools:context=".ui.ui.places.LatestPlacesListFragment"
         tools:listitem="@layout/fragment_place" />
 
 

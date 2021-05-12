@@ -1,4 +1,4 @@
-package com.hdrescuer.supportyourdiscoveries.ui.ui.tendencias;
+package com.hdrescuer.supportyourdiscoveries.ui.ui.places;
 
 import android.content.Context;
 import android.os.Bundle;
