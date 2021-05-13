@@ -92,14 +92,9 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
     public void onResume() {
         super.onResume();
         if(!alreadyCreated){
-            refreshUserDetails();
+
         }
         alreadyCreated = false;
-    }
-
-
-    private void refreshUserDetails() {
-
     }
 
 
@@ -125,12 +120,9 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
 
 
     @Override
-    public void onListItemClick(int position) {
+    public void onListItemClick(int position,String action) {
 
-        /*String id = this.placeEntityList.get(position).getId();
-        Intent i = new Intent(MyApp.getContext(), PlaceDetailsActivity.class);
-        i.putExtra("id", id);
-        startActivity(i);*/
+
     }
 
 

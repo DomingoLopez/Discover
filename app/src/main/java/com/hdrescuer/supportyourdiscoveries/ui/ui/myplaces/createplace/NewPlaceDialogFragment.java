@@ -25,6 +25,7 @@ import com.hdrescuer.supportyourdiscoveries.BuildConfig;
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.Constants;
 import com.hdrescuer.supportyourdiscoveries.common.MyApp;
+import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.PlaceRepository;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 
@@ -83,8 +84,11 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     ArrayList<String> img_paths;
     String currentPhotoPath;
 
+    //ViewModel
+    MyPlacesListViewModel myPlacesListViewModel;
 
-    PlaceRepository placeRepository;
+    //Place id
+    Integer place_id;
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -95,13 +99,20 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
     }
 
+    public NewPlaceDialogFragment(int place_id){
+
+        this.place_id = place_id;
+
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_SupportYourDiscoveries_FullScreenDialogStyle);
 
         this.img_paths = new ArrayList<>();
-        this.placeRepository = new PlaceRepository(MyApp.getInstance());
+
+        this.myPlacesListViewModel = new ViewModelProvider(requireActivity()).get(MyPlacesListViewModel.class);
 
     }
 
@@ -115,7 +126,10 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
         findViews(view);
 
-        setFormValues();
+        if(this.place_id != null){
+            setFormValues();
+        }
+
 
         return view;
     }
@@ -124,7 +138,11 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.btn_delete_photo.setVisibility(View.INVISIBLE);
+        if(this.img_paths.size() == 0)
+            this.btn_delete_photo.setVisibility(View.INVISIBLE);
+        else
+            this.btn_delete_photo.setVisibility(View.VISIBLE);
+
         this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(),this.img_paths));
 
 
@@ -160,12 +178,14 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         this.description = view.findViewById(R.id.new_place_description);
     }
 
-    /**
-     * Método que setea los elementos del formulario del diálogo
-     * @author Domingo Lopez
-     */
+
     private void setFormValues() {
 
+        //Obtenemos los datos del lugar
+        PlaceEntity placeEntity = this.myPlacesListViewModel.getPlaceDetails(this.place_id);
+        this.title.setText(placeEntity.title);
+        this.img_paths = placeEntity.getPhoto_paths();
+        this.description.setText(placeEntity.description);
 
     }
 
@@ -199,6 +219,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
             case R.id.btnClose:
 
+                this.btn_delete_photo.setVisibility(View.INVISIBLE);
                 getDialog().dismiss();
 
                 break;
@@ -236,7 +257,6 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
 
                 if(validateFields()) {
-                   //galleryAddPic();
                     savePlaceToDB();
                 }
                 getDialog().dismiss();
@@ -250,17 +270,38 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
     private void savePlaceToDB() {
 
-        this.placeRepository.insertPlace(new PlaceEntity(
-                this.title.getText().toString(),
-                this.description.getText().toString(),
-                0.0f,
-                Constants.ID,
-                this.img_paths,
-                Clock.systemUTC().instant().toString(),
-                0.0,
-                0.0,
-                "Sin dirección"
-        ));
+        if(this.place_id != null){
+
+            PlaceEntity placeEntity = new PlaceEntity(
+                    this.title.getText().toString(),
+                    this.description.getText().toString(),
+                    0.0f,
+                    Constants.ID,
+                    this.img_paths,
+                    Clock.systemUTC().instant().toString(),
+                    0.0,
+                    0.0,
+                    "Sin dirección");
+            placeEntity.setId(this.place_id);
+
+            this.myPlacesListViewModel.updatePlace(placeEntity);
+
+        }else{
+            this.myPlacesListViewModel.insertPlace(new PlaceEntity(
+                    this.title.getText().toString(),
+                    this.description.getText().toString(),
+                    0.0f,
+                    Constants.ID,
+                    this.img_paths,
+                    Clock.systemUTC().instant().toString(),
+                    0.0,
+                    0.0,
+                    "Sin dirección"
+            ));
+        }
+
+
+
 
     }
 

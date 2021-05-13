@@ -1,21 +1,30 @@
 package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hdrescuer.supportyourdiscoveries.R;
+import com.hdrescuer.supportyourdiscoveries.common.MyApp;
 import com.hdrescuer.supportyourdiscoveries.data.LatestPlacesListViewModel;
+import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace.NewPlaceDialogFragment;
+import com.hdrescuer.supportyourdiscoveries.ui.ui.placedetails.PlaceDetailsActivity;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.places.LatestPlacesRecyclerView;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
 
@@ -30,9 +39,9 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
     private int mColumnCount = 1;
 
     RecyclerView recyclerView;
-    LatestPlacesRecyclerView adapter;
-    List<PlaceEntity> placeEntityList;
-    LatestPlacesListViewModel latestPlacesListViewModel;
+    MyPlacesRecyclerView adapter;
+    List<PlaceEntity> placeList;
+    MyPlacesListViewModel myPlacesListViewModel;
 
     FloatingActionButton btn;
 
@@ -57,12 +66,13 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
 
-        this.latestPlacesListViewModel = new ViewModelProvider(getActivity()).get(LatestPlacesListViewModel.class);
+        this.myPlacesListViewModel = new ViewModelProvider(requireActivity()).get(MyPlacesListViewModel.class);
         alreadyCreated = true;
 
     }
@@ -78,9 +88,9 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
         this.recyclerView = view.findViewById(R.id.list_my_places);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        this.adapter = new LatestPlacesRecyclerView(
+        this.adapter = new MyPlacesRecyclerView(
                 getActivity(),
-                this.placeEntityList,
+                this.placeList,
                 this
         );
         this.recyclerView.setAdapter(adapter);
@@ -97,15 +107,13 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
     public void onResume() {
         super.onResume();
         if(!alreadyCreated){
-            refreshUserDetails();
+          
         }
         alreadyCreated = false;
     }
 
 
-    private void refreshUserDetails() {
 
-    }
 
 
 
@@ -118,25 +126,61 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
 
     private void loadUserData() {
 
-        /*this.latestPlacesListViewModel.getUsers().observe(requireActivity(), new Observer<List<User>>() {
+        this.myPlacesListViewModel.getPlaces().observe(requireActivity(), new Observer<List<PlaceEntity>>() {
             @Override
-            public void onChanged(List<User> users) {
-                Log.i("USERS", users.toString());
-                userList = users;
-                adapter.setData(userList);
+            public void onChanged(List<PlaceEntity> places) {
+                Log.i("PLACES", places.toString());
+                placeList = places;
+                adapter.setData(placeList);
             }
-        });*/
+        });
+
 
     }
 
 
     @Override
-    public void onListItemClick(int position) {
+    public void onListItemClick(int position, String action) {
 
-        /*String id = this.placeEntityList.get(position).getId();
-        Intent i = new Intent(MyApp.getContext(), PlaceDetailsActivity.class);
-        i.putExtra("id", id);
-        startActivity(i);*/
+        switch (action){
+
+            case "EDIT":
+                NewPlaceDialogFragment dialog = new NewPlaceDialogFragment(placeList.get(position).getId());
+                dialog.show(this.getActivity().getSupportFragmentManager(), "NewPlaceFragment");
+                break;
+
+            case "DELETE":
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setMessage("¿Desea elimininar este lugar?");
+
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        myPlacesListViewModel.deletePlace(placeList.get(position).getId());
+
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+
+                AlertDialog dialog_delete = builder.create();
+                dialog_delete.show();
+                break;
+
+            case "SHOW":
+                /*int id = this.placeList.get(position).getId();
+                Intent i = new Intent(MyApp.getContext(), PlaceDetailsActivity.class);
+                i.putExtra("id", id);
+                startActivity(i);*/
+                break;
+
+        }
+
     }
 
 

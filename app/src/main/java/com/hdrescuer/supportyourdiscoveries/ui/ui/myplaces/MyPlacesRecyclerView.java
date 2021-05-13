@@ -4,15 +4,20 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyPlacesRecyclerView extends RecyclerView.Adapter<MyPlacesRecyclerView.ViewHolder> {
@@ -33,7 +38,7 @@ public class MyPlacesRecyclerView extends RecyclerView.Adapter<MyPlacesRecyclerV
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_place, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view,mOnClickListener) ;
     }
 
     /**
@@ -47,17 +52,18 @@ public class MyPlacesRecyclerView extends RecyclerView.Adapter<MyPlacesRecyclerV
         if(mValues != null) {
             holder.mItem = mValues.get(position);
 
-           // holder.user_name.setText(holder.mItem.getUsername() + " " +holder.mItem.getLastname());
+            holder.place_title.setText(holder.mItem.title);
+            holder.place_address.setText(holder.mItem.getAddress());
 
-           /* if(holder.mItem.getTimestamp_ini() != null)
-                holder.last_monitoring.setText(dateFormat.format(holder.mItem.getTimestamp_ini()));
-            else
-                holder.last_monitoring.setText("- -");
+            ArrayList<String> img_paths = holder.mItem.getPhoto_paths();
+            String path_principal = img_paths.get(0);
 
-            if(holder.mItem.getTotal_time() != null)
-                holder.sesion_duration.setText(SyncStateContract.Constants.getHMS(holder.mItem.getTotal_time()));
-            else
-                holder.sesion_duration.setText("- -");*/
+            Glide.with(holder.itemView.getContext())
+                    .load(path_principal)
+                    .centerCrop()
+                    .into(holder.place_img);
+
+
         }
     }
 
@@ -82,30 +88,66 @@ public class MyPlacesRecyclerView extends RecyclerView.Adapter<MyPlacesRecyclerV
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public final View mView;
-       /* public final TextView user_name;
-        public final TextView last_monitoring;
-        public final TextView sesion_duration;*/
+
+        public ImageView place_img;
+        public TextView place_title;
+        public TextView place_address;
         public PlaceEntity mItem;
 
-        public ViewHolder(View view) {
+        private WeakReference<ListItemClickListener> listenerRef;
+
+        ImageView edit_place;
+        ImageView delete_place;
+
+        public ViewHolder(View view,ListItemClickListener listener) {
             super(view);
             mView = view;
-           /* user_name = (TextView) view.findViewById(R.id.textViewUserName);
-            last_monitoring = (TextView) view.findViewById(R.id.tvLastSession);
-            sesion_duration = (TextView) view.findViewById(R.id.tvTotalTime);*/
+
+            listenerRef = new WeakReference<>(listener);
+
+
+            this.place_img = view.findViewById(R.id.my_place_img);
+            this.place_title = view.findViewById(R.id.my_place_title);
+            this.place_address = view.findViewById(R.id.my_place_address);
+
+            this.edit_place = view.findViewById(R.id.btn_edit_place);
+            this.edit_place.setOnClickListener(this);
+            this.delete_place = view.findViewById(R.id.btn_delete_place);
+            this.delete_place.setOnClickListener(this);
+
+
+
 
             view.setOnClickListener(this);
         }
 
         @Override
         public String toString() {
-            return super.toString()/* + " '" + user_name.getText() + "'"*/;
+            return super.toString() + " '" + place_title.getText() + "'";
         }
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
-            mOnClickListener.onListItemClick(position);
+
+            String action = "";
+
+            switch (v.getId()){
+                case R.id.btn_edit_place:
+                    action = "EDIT";
+                    break;
+
+                case R.id.btn_delete_place:
+                    action = "DELETE";
+                    break;
+
+                default:
+                    action = "SHOW";
+
+                    break;
+            }
+
+            listenerRef.get().onListItemClick(getAdapterPosition(), action);
+
         }
     }
 }

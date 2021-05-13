@@ -4,19 +4,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.ui.places.LatestPlacesListFragment">
+    android:layout_height="fill_parent"
+    android:layout_marginTop="0dp"
+    android:paddingTop="0dp"
+    tools:context=".ui.ui.myplaces.MyPlacesListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
-        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.places.LatestPlacesListFragment"
+        android:name="com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.LatestPlacesFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="10dp"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp"
         android:paddingEnd="10dp"
         android:paddingRight="10dp"
         android:visibility="visible"
@@ -27,11 +29,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.291"
-        tools:context=".ui.ui.places.LatestPlacesListFragment"
-        tools:listitem="@layout/fragment_place" />
-
-
-
+        tools:context=".ui.ui.myplaces.LatestPlacesFragment"
+        tools:listitem="@layout/fragment_latest_places_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

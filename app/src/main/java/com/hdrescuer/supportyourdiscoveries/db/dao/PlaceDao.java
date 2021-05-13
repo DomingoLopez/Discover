@@ -1,5 +1,6 @@
 package com.hdrescuer.supportyourdiscoveries.db.dao;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -29,6 +30,9 @@ public interface PlaceDao {
 
     @Query("SELECT * FROM PLACE")
     List<PlaceEntity> getAllPlaces();
+
+    @Query("SELECT * FROM PLACE WHERE author_id = :id")
+    List<PlaceEntity> getAllPlacesByAuthor(int id);
 
 
 }

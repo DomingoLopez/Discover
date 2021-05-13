@@ -1,21 +1,27 @@
 package com.hdrescuer.supportyourdiscoveries.ui;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hdrescuer.supportyourdiscoveries.R;
+import com.hdrescuer.supportyourdiscoveries.data.LatestPlacesListViewModel;
+import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,6 +30,14 @@ import androidx.navigation.ui.NavigationUI;
 public class HomeActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
+
+    //ViewModel myPlaces
+
+    MyPlacesListViewModel myPlacesListViewModel;
+
+    //ViewModel allPlaces
+
+    LatestPlacesListViewModel latestPlacesListViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +72,12 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        getSupportActionBar().hide();
 
+
+
+        //Inciamos ViewModels
+        this.myPlacesListViewModel = new ViewModelProvider(this).get(MyPlacesListViewModel.class);
+        this.latestPlacesListViewModel = new LatestPlacesListViewModel();
 
 
 

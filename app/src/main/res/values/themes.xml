@@ -40,6 +40,16 @@
 
     </style>
 
+    <style name="Theme.SupportYourDiscoveries.NoTitle" parent ="Theme.AppCompat.Dialog">
+
+        <!--Estilos para pantalla completa-->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/white</item>
+
+    </style>
+
 
 
 

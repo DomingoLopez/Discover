@@ -37,6 +37,7 @@ public class PlaceEntity {
         this.address = address;
     }
 
+
     public int getId() {
         return id;
     }

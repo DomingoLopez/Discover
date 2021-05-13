@@ -4,12 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
+import com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace.NewPlaceDialogFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,7 +35,7 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_place, parent, false);
+                .inflate(R.layout.fragment_latest_places_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -82,17 +85,20 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public final View mView;
-       /* public final TextView user_name;
-        public final TextView last_monitoring;
-        public final TextView sesion_duration;*/
+
+        public  TextView title;
         public PlaceEntity mItem;
+        //ViewPager
+        ViewPager2 viewPager;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-           /* user_name = (TextView) view.findViewById(R.id.textViewUserName);
-            last_monitoring = (TextView) view.findViewById(R.id.tvLastSession);
-            sesion_duration = (TextView) view.findViewById(R.id.tvTotalTime);*/
+
+            this.title = view.findViewById(R.id.latest_places_item_title);
+            this.viewPager = view.findViewById(R.id.viewPagerLatest);
+
+            this.viewPager.setAdapter(new NewPlaceDialogFragment.ScreenSlidePagerAdapter(this.getActivity(),this.img_paths));
 
             view.setOnClickListener(this);
         }
@@ -105,7 +111,7 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            mOnClickListener.onListItemClick(position);
+            mOnClickListener.onListItemClick(position, "");
         }
     }
 }

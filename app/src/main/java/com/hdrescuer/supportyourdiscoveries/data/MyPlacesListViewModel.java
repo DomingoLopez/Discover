@@ -4,16 +4,45 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.hdrescuer.supportyourdiscoveries.common.MyApp;
+import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.PlaceRepository;
+import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
+
+import java.util.List;
+
 public class MyPlacesListViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private PlaceRepository placeRepository;
+    private MutableLiveData<List<PlaceEntity>> places;
 
     public MyPlacesListViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is photo fragment");
+        this.placeRepository = new PlaceRepository(MyApp.getInstance());
+        places = getPlaces();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+
+    public MutableLiveData<List<PlaceEntity>> getPlaces(){
+        return this.placeRepository.getAllPlacesByAuthor();
     }
+
+    public void insertPlace(PlaceEntity placeEntity){
+        this.placeRepository.insertPlace(placeEntity);
+    }
+
+    public void updatePlace(PlaceEntity placeEntity){
+        this.placeRepository.updatePlace(placeEntity);
+    }
+
+    public void deletePlace(int id){
+        this.placeRepository.deleteById(id);
+    }
+
+
+    public PlaceEntity getPlaceDetails(int id){
+        return this.placeRepository.getPlaceById(id);
+    }
+
+
+
+
 }
