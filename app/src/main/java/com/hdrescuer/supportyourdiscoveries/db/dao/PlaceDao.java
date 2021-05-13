@@ -31,8 +31,8 @@ public interface PlaceDao {
     @Query("SELECT * FROM PLACE")
     List<PlaceEntity> getAllPlaces();
 
-    @Query("SELECT * FROM PLACE WHERE author_id = :id")
-    List<PlaceEntity> getAllPlacesByAuthor(int id);
+    @Query("SELECT * FROM PLACE WHERE author_name = :author_name")
+    List<PlaceEntity> getAllPlacesByAuthor(String author_name);
 
 
 }

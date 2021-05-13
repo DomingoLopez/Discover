@@ -3,14 +3,12 @@ package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,13 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hdrescuer.supportyourdiscoveries.R;
-import com.hdrescuer.supportyourdiscoveries.common.MyApp;
-import com.hdrescuer.supportyourdiscoveries.data.LatestPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace.NewPlaceDialogFragment;
-import com.hdrescuer.supportyourdiscoveries.ui.ui.placedetails.PlaceDetailsActivity;
-import com.hdrescuer.supportyourdiscoveries.ui.ui.places.LatestPlacesRecyclerView;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
 
 import java.util.List;
@@ -35,8 +29,6 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
 
     RecyclerView recyclerView;
     MyPlacesRecyclerView adapter;
@@ -68,7 +60,8 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
 
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            // TODO: Customize parameters
+            int mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
 

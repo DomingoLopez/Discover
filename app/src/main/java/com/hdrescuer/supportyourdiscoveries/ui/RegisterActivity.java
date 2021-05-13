@@ -64,15 +64,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     this.authorRepository.insertAuthor(new AuthorEntity(
                             this.username.getText().toString(),
                             this.email.getText().toString(),
-                            this.password.getText().toString()
+                            this.password.getText().toString(),
+                            ""
                     ));
 
-                    AuthorEntity authorCreated = this.authorRepository.getAuthorByUserName(this.username.getText().toString());
 
-                    Constants.ID = authorCreated.id;
-                    Constants.USERNAME = authorCreated.username;
-                    Constants.EMAIL = authorCreated.getEmail();
-                    Constants.PHOTO = authorCreated.getMain_photo_url();
+                    Constants.USERNAME = username.getText().toString();
+                    Constants.EMAIL = email.getText().toString();
+                    Constants.PHOTO = "";
 
                     Intent i_register = new Intent(RegisterActivity.this, HomeActivity.class);
                     startActivity(i_register);

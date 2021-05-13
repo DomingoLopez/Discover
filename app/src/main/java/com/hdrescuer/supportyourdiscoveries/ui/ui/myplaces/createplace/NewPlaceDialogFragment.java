@@ -90,6 +90,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     //Place id
     Integer place_id;
 
+    PlaceEntity placeEntity_to_update;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -182,10 +183,10 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     private void setFormValues() {
 
         //Obtenemos los datos del lugar
-        PlaceEntity placeEntity = this.myPlacesListViewModel.getPlaceDetails(this.place_id);
-        this.title.setText(placeEntity.title);
-        this.img_paths = placeEntity.getPhoto_paths();
-        this.description.setText(placeEntity.description);
+        this.placeEntity_to_update = this.myPlacesListViewModel.getPlaceDetails(this.place_id);
+        this.title.setText(placeEntity_to_update.title);
+        this.img_paths = placeEntity_to_update.getPhoto_paths();
+        this.description.setText(placeEntity_to_update.description);
 
     }
 
@@ -275,8 +276,8 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             PlaceEntity placeEntity = new PlaceEntity(
                     this.title.getText().toString(),
                     this.description.getText().toString(),
-                    0.0f,
-                    Constants.ID,
+                    this.placeEntity_to_update.getRating(),
+                    Constants.USERNAME,
                     this.img_paths,
                     Clock.systemUTC().instant().toString(),
                     0.0,
@@ -291,7 +292,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                     this.title.getText().toString(),
                     this.description.getText().toString(),
                     0.0f,
-                    Constants.ID,
+                    Constants.USERNAME,
                     this.img_paths,
                     Clock.systemUTC().instant().toString(),
                     0.0,

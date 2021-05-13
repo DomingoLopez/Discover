@@ -29,15 +29,15 @@ public class AuthorRepository{
 
     public List<AuthorEntity> getAllAuthors(){ return authorDao.getAllAuthors();}
 
-    public AuthorEntity getAuthorById(int id){return authorDao.getAuthorById(id);}
+    public AuthorEntity getAuthorById(String author_name){return authorDao.getAuthorById(author_name);}
 
     public AuthorEntity getAuthorByUserName(String username){return authorDao.getAuthorByUserName(username);}
 
     public void deleteAllAuthors(){
         authorDao.deleteAll();}
 
-    public void deleteById(int id){
-        authorDao.deleteById(id);
+    public void deleteById(String author_name){
+        authorDao.deleteById(author_name);
     }
 
 

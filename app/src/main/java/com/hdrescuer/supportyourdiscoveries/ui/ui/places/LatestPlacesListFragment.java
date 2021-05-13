@@ -2,18 +2,20 @@ package com.hdrescuer.supportyourdiscoveries.ui.ui.places;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
-import com.hdrescuer.supportyourdiscoveries.data.LatestPlacesListViewModel;
+import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
 
     RecyclerView recyclerView;
     LatestPlacesRecyclerView adapter;
-    List<PlaceEntity> placeEntityList;
-    LatestPlacesListViewModel latestPlacesListViewModel;
+    List<PlaceEntity> placeList;
+    MyPlacesListViewModel latestPlacesListViewModel;
 
     boolean alreadyCreated = false;
 
@@ -57,7 +59,7 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
         }
 
 
-        this.latestPlacesListViewModel = new ViewModelProvider(getActivity()).get(LatestPlacesListViewModel.class);
+        this.latestPlacesListViewModel = new ViewModelProvider(getActivity()).get(MyPlacesListViewModel.class);
         alreadyCreated = true;
 
     }
@@ -75,7 +77,8 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
 
         this.adapter = new LatestPlacesRecyclerView(
                 getActivity(),
-                this.placeEntityList,
+                this.getActivity(),
+                this.placeList,
                 this
         );
         this.recyclerView.setAdapter(adapter);
@@ -107,14 +110,14 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
 
     private void loadUserData() {
 
-        /*this.latestPlacesListViewModel.getUsers().observe(requireActivity(), new Observer<List<User>>() {
+        this.latestPlacesListViewModel.getAllPlaces().observe(requireActivity(), new Observer<List<PlaceEntity>>() {
             @Override
-            public void onChanged(List<User> users) {
-                Log.i("USERS", users.toString());
-                userList = users;
-                adapter.setData(userList);
+            public void onChanged(List<PlaceEntity> places) {
+
+                placeList = places;
+                adapter.setData(placeList);
             }
-        });*/
+        });
 
     }
 

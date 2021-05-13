@@ -23,16 +23,16 @@ public interface AuthorDao {
     @Query("DELETE FROM AUTHOR")
     void deleteAll();
 
-    @Query("DELETE FROM AUTHOR WHERE id = :id")
-    void deleteById(int id);
+    @Query("DELETE FROM AUTHOR WHERE username = :author_name")
+    void deleteById(String author_name);
 
-    @Query("SELECT * FROM AUTHOR WHERE id = :id")
-    AuthorEntity getAuthorById(int id);
+    @Query("SELECT * FROM AUTHOR WHERE username = :author_name")
+    AuthorEntity getAuthorById(String author_name);
 
     @Query("SELECT * FROM AUTHOR WHERE username = :username")
     AuthorEntity getAuthorByUserName(String username);
 
-    @Query("SELECT * FROM PLACE")
+    @Query("SELECT * FROM AUTHOR")
     List<AuthorEntity> getAllAuthors();
 
 

@@ -25,6 +25,11 @@ public class MyPlacesListViewModel extends ViewModel {
         return this.placeRepository.getAllPlacesByAuthor();
     }
 
+    public MutableLiveData<List<PlaceEntity>> getAllPlaces(){
+        return this.placeRepository.getAllPlaces();
+    }
+
+
     public void insertPlace(PlaceEntity placeEntity){
         this.placeRepository.insertPlace(placeEntity);
     }

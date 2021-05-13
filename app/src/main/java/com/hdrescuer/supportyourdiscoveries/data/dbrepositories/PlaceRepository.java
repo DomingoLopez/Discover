@@ -48,7 +48,7 @@ public class PlaceRepository{
             this.places = new MutableLiveData<>();
 
         List<PlaceEntity> places;
-        places = this.placeDao.getAllPlacesByAuthor(Constants.ID);
+        places = this.placeDao.getAllPlacesByAuthor(Constants.USERNAME);
 
         this.places.setValue(places);
 

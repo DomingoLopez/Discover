@@ -16,8 +16,8 @@ public class PlaceEntity {
 
     public String title;
     public String description;
-    double rating;
-    public int author_id;
+    float rating;
+    public String author_name;
     public ArrayList<String> photo_paths;
     public String instant;
     double latitud;
@@ -25,11 +25,11 @@ public class PlaceEntity {
     String address;
 
 
-    public PlaceEntity(String title, String description, double rating, int author_id, ArrayList<String> photo_paths, String instant, double latitud, double longitud, String address) {
+    public PlaceEntity(String title, String description, float rating, String author_name, ArrayList<String> photo_paths, String instant, double latitud, double longitud, String address) {
         this.title = title;
         this.description = description;
         this.rating = rating;
-        this.author_id = author_id;
+        this.author_name = author_name;
         this.photo_paths = photo_paths;
         this.instant = instant;
         this.latitud = latitud;
@@ -62,20 +62,20 @@ public class PlaceEntity {
         this.description = description;
     }
 
-    public double getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
-    public int getAuthor_id() {
-        return author_id;
+    public String getAuthor_name() {
+        return author_name;
     }
 
-    public void setAuthor_id(int author_id) {
-        this.author_id = author_id;
+    public void setAuthor_name(String author_name) {
+        this.author_name = author_name;
     }
 
     public ArrayList<String> getPhoto_paths() {

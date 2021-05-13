@@ -1,33 +1,28 @@
 package com.hdrescuer.supportyourdiscoveries.db.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "AUTHOR")
 public class AuthorEntity {
 
-    @PrimaryKey(autoGenerate = true)
-    public int id;
-
-
+    @PrimaryKey @NonNull
     public String username;
+
+
     String email;
     String password;
     public String main_photo_url;
 
-    public AuthorEntity(String username, String email, String password) {
+    public AuthorEntity(String username, String email, String password, String main_photo_url) {
         this.username = username;
         this.email  = email;
         this.password = password;
+        this.main_photo_url = main_photo_url;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
