@@ -3,6 +3,8 @@ package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
@@ -93,6 +95,8 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     PlaceEntity placeEntity_to_update;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private final int PICK_IMAGE = 100;
 
 
     public NewPlaceDialogFragment(){
@@ -199,28 +203,55 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             case R.id.btn_add_images:
 
 
+                //Dialog para elegir entre cámara o galería
+                AlertDialog.Builder builder_chooser = new AlertDialog.Builder(this.getActivity());
+                LayoutInflater inflater = requireActivity().getLayoutInflater();
+                View viewDialog = inflater.inflate(R.layout.choose_gallery_photo,null);
+                builder_chooser.setView(viewDialog);
+                builder_chooser.setMessage("¿Añadir desde galería o tomar instantánea?");
+
+                AlertDialog dialog_chooser = builder_chooser.create();
+
+                ImageView camera = viewDialog.findViewById(R.id.btn_camera_icon);
+                camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog_chooser.dismiss();
+                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                        File photoFile = null;
+                        try {
+                            photoFile = createImageFile();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        // Continue only if the File was successfully created
+                        if (photoFile != null) {
+                            Uri photoURI = FileProvider.getUriForFile(requireActivity().getApplicationContext(),
+                                    BuildConfig.APPLICATION_ID+".provider",
+                                    photoFile);
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                        }
 
 
+                    }
+                });
 
+                ImageView gallery = viewDialog.findViewById(R.id.btn_gallery_icon);
+                gallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog_chooser.dismiss();
 
+                        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(gallery, PICK_IMAGE);
 
+                    }
+                });
 
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                dialog_chooser.show();
 
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(requireActivity().getApplicationContext(),
-                            BuildConfig.APPLICATION_ID+".provider",
-                            photoFile);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
 
 
                 break;
@@ -234,7 +265,6 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
             case R.id.btn_delete_photo:
 
-                Log.i("CLICK","aqui");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
                 builder.setMessage("¿Desea elimininar la instantánea?");
@@ -301,7 +331,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             int id = this.myPlacesListViewModel.getMaxId();
 
             this.myPlacesListViewModel.insertPlace(new PlaceEntity(
-                    id,
+                    id+1,
                     this.title.getText().toString(),
                     this.description.getText().toString(),
                     0.0f,
@@ -382,6 +412,45 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
 
             }
+        }else if (requestCode == PICK_IMAGE){
+            if(resultCode == RESULT_OK ){
+                if(this.btn_delete_photo.getVisibility() == View.INVISIBLE)
+                    this.btn_delete_photo.setVisibility(View.VISIBLE);
+
+/*
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(requireActivity().getApplicationContext(),
+                            BuildConfig.APPLICATION_ID+".provider",
+                            photoFile);
+
+
+                }
+*/
+                Uri selectedImage = data.getData();
+                String[] filePath = { MediaStore.Images.Media.DATA };
+                Cursor c = requireActivity().getContentResolver().query(selectedImage,filePath, null, null, null);
+                c.moveToFirst();
+                int columnIndex = c.getColumnIndex(filePath[0]);
+                String picturePath = c.getString(columnIndex);
+                c.close();
+
+
+                this.img_paths.add(picturePath);
+                this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(),this.img_paths));
+
+
+
+                Log.i("URI",""+picturePath);
+
+            }
+
         }
     }
 
@@ -429,7 +498,12 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
 
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
+
+    }
 
 
 }

@@ -1,6 +1,7 @@
 package com.hdrescuer.supportyourdiscoveries.ui.ui.places;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -138,5 +139,12 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
 
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+
+    }
 
 }

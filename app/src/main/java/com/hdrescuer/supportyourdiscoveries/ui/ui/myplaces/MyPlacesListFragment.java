@@ -3,6 +3,7 @@ package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -194,5 +195,12 @@ public class MyPlacesListFragment extends Fragment implements ListItemClickListe
 
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+
+    }
 
 }

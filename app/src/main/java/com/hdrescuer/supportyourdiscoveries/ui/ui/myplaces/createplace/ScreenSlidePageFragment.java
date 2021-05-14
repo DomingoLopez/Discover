@@ -1,5 +1,6 @@
 package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -77,12 +78,12 @@ public class ScreenSlidePageFragment extends Fragment {
         if(this.img_path.equals("default")){
             Glide.with(this)
                     .load(R.mipmap.img_no_img_foreground)
-                    .centerCrop()
+                    .fitCenter()
                     .into(img);
         }else{
             Glide.with(this)
                     .load(this.img_path)
-                    .centerCrop()
+                    .fitCenter()
                     .into(img);
 
         }
@@ -90,4 +91,12 @@ public class ScreenSlidePageFragment extends Fragment {
 
         return viewgroup;
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+
+    }
+
 }

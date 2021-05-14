@@ -2,6 +2,7 @@ package com.hdrescuer.supportyourdiscoveries.ui;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -104,7 +105,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
+
+    }
 
 
 
