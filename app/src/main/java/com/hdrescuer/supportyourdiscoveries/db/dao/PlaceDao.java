@@ -34,5 +34,8 @@ public interface PlaceDao {
     @Query("SELECT * FROM PLACE WHERE author_name = :author_name")
     List<PlaceEntity> getAllPlacesByAuthor(String author_name);
 
+    @Query("SELECT MAX(id) FROM PLACE")
+    int getMaxId();
+
 
 }

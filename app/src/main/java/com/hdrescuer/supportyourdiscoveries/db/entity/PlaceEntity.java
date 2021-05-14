@@ -10,10 +10,8 @@ import java.util.ArrayList;
 @Entity(tableName = "PLACE")
 public class PlaceEntity {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int id;
-
-
     public String title;
     public String description;
     float rating;
@@ -25,7 +23,8 @@ public class PlaceEntity {
     String address;
 
 
-    public PlaceEntity(String title, String description, float rating, String author_name, ArrayList<String> photo_paths, String instant, double latitud, double longitud, String address) {
+    public PlaceEntity(int id, String title, String description, float rating, String author_name, ArrayList<String> photo_paths, String instant, double latitud, double longitud, String address) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.rating = rating;

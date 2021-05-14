@@ -38,6 +38,10 @@ public class MyPlacesListViewModel extends ViewModel {
         this.placeRepository.updatePlace(placeEntity);
     }
 
+    public int getMaxId(){
+        return this.placeRepository.getMaxId();
+    }
+
     public void deletePlace(int id){
         this.placeRepository.deleteById(id);
     }

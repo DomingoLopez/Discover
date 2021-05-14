@@ -198,6 +198,13 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         switch (view.getId()) {
             case R.id.btn_add_images:
 
+
+
+
+
+
+
+
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 File photoFile = null;
@@ -227,8 +234,8 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
             case R.id.btn_delete_photo:
 
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                Log.i("CLICK","aqui");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
                 builder.setMessage("¿Desea elimininar la instantánea?");
 
@@ -254,6 +261,8 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
+                break;
+
             case R.id.btnAddPlace:
 
 
@@ -271,9 +280,10 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
     private void savePlaceToDB() {
 
-        if(this.place_id != null){
+        if(this.place_id != null){ //Edit
 
             PlaceEntity placeEntity = new PlaceEntity(
+                    this.place_id,
                     this.title.getText().toString(),
                     this.description.getText().toString(),
                     this.placeEntity_to_update.getRating(),
@@ -283,12 +293,15 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                     0.0,
                     0.0,
                     "Sin dirección");
-            placeEntity.setId(this.place_id);
 
             this.myPlacesListViewModel.updatePlace(placeEntity);
 
         }else{
+
+            int id = this.myPlacesListViewModel.getMaxId();
+
             this.myPlacesListViewModel.insertPlace(new PlaceEntity(
+                    id,
                     this.title.getText().toString(),
                     this.description.getText().toString(),
                     0.0f,

@@ -79,6 +79,10 @@ public class PlaceRepository{
         refreshPlaces(place,"UPDATE");
     }
 
+    public int getMaxId(){
+        return placeDao.getMaxId();
+    }
+
     private static class insertPlaceAsyncTask extends AsyncTask<PlaceEntity, Void, Void>{
 
         private PlaceDao placeDaoAsyncTask;
