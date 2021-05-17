@@ -12,5 +12,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
+
+        getSupportActionBar().hide();
+
+
+
     }
 }

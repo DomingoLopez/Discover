@@ -5,6 +5,7 @@ import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
 
             holder.viewPager.setAdapter(new ScreenSlidePagerAdapter(fa,holder.mItem.getPhoto_paths()));
             holder.title.setText(holder.mItem.getTitle());
+            holder.address.setText(holder.mItem.getAddress());
+            holder.score.setText(String.format("%.1f", holder.mItem.getRating()));
             holder.author_usename.setText(holder.mItem.getAuthor_name());
             holder.ratingBar.setRating(holder.mItem.getRating());
            // holder.user_name.setText(holder.mItem.getUsername() + " " +holder.mItem.getLastname());
@@ -105,6 +108,9 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
         public final View mView;
 
         public TextView title;
+        public TextView address;
+        public TextView score;
+        public Button btn_place_details;
         public PlaceEntity mItem;
         public ImageView author_photo;
         public TextView author_usename;
@@ -119,10 +125,15 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
             mView = view;
 
             this.title = view.findViewById(R.id.latest_places_item_title);
+            this.address = view.findViewById(R.id.latest_places_item_address);
+            this.score = view.findViewById(R.id.tv_score);
             this.viewPager = view.findViewById(R.id.viewPagerLatest);
             this.author_photo = view.findViewById(R.id.author_phot);
             this.author_usename = view.findViewById(R.id.author_username);
             this.ratingBar = view.findViewById(R.id.ratingBarPlace);
+
+            this.btn_place_details = view.findViewById(R.id.btn_go_place_details);
+            this.btn_place_details.setOnClickListener(this);
 
             view.setOnClickListener(this);
         }
@@ -134,8 +145,12 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
-            mOnClickListener.onListItemClick(position, "");
+
+            if(v.getId() == R.id.btn_go_place_details){
+                int position = getAdapterPosition();
+                mOnClickListener.onListItemClick(position, "");
+            }
+
         }
     }
 

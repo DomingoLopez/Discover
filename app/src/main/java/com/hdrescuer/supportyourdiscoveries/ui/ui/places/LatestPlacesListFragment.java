@@ -1,6 +1,7 @@
 package com.hdrescuer.supportyourdiscoveries.ui.ui.places;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
+import com.hdrescuer.supportyourdiscoveries.common.MyApp;
 import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
+import com.hdrescuer.supportyourdiscoveries.ui.ui.placedetails.PlaceDetailsActivity;
 
 import java.util.List;
 
@@ -125,6 +128,14 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
 
     @Override
     public void onListItemClick(int position,String action) {
+
+
+
+            int id_place = this.placeList.get(position).getId();
+
+            Intent i = new Intent(this.getContext(), PlaceDetailsActivity.class);
+            i.putExtra("id",id_place);
+            startActivity(i);
 
 
     }

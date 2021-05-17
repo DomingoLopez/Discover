@@ -11,7 +11,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/author_username"
@@ -42,7 +43,7 @@
             android:layout_marginTop="8dp"
             android:text="TextView"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/viewPagerLatest"
             app:layout_constraintTop_toBottomOf="@+id/viewPagerLatest" />
@@ -60,13 +61,45 @@
 
         <RatingBar
             android:id="@+id/ratingBarPlace"
+            style="?android:attr/ratingBarStyleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/latest_places_item_title"
-            app:layout_constraintTop_toBottomOf="@+id/latest_places_item_title"
+            android:layout_marginTop="4dp"
             android:isIndicator="true"
-            android:max="5"
-            android:numStars="5" />
+            android:numStars="5"
+            android:progressTint="@color/golden"
+            android:stepSize="0.1"
+            app:layout_constraintStart_toStartOf="@+id/latest_places_item_title"
+            app:layout_constraintTop_toBottomOf="@+id/latest_places_item_address" />
+
+        <TextView
+            android:id="@+id/latest_places_item_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/latest_places_item_title"
+            app:layout_constraintTop_toBottomOf="@+id/latest_places_item_title" />
+
+        <Button
+            android:id="@+id/btn_go_place_details"
+            android:layout_width="56dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="28dp"
+            app:icon="@drawable/ic_baseline_play_arrow_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/latest_places_item_title" />
+
+        <TextView
+            android:id="@+id/tv_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="0"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ratingBarPlace"
+            app:layout_constraintStart_toEndOf="@+id/ratingBarPlace"
+            app:layout_constraintTop_toTopOf="@+id/ratingBarPlace" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
