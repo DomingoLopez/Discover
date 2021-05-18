@@ -48,7 +48,7 @@ public class MyPlacesListViewModel extends ViewModel {
 
 
     public PlaceEntity getPlaceDetails(int id){
-        return this.placeRepository.getPlaceById(id);
+        return this.placeRepository.getPlaceById_no_nut(id);
     }
 
 

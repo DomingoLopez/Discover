@@ -56,7 +56,19 @@ public class PlaceRepository{
 
     }
 
-    public PlaceEntity getPlaceById(int id){return placeDao.getPlaceById(id);}
+    public MutableLiveData<PlaceEntity> getPlaceById(int id){
+
+        PlaceEntity place = placeDao.getPlaceById(id);
+
+        MutableLiveData<PlaceEntity> place_mut = new MutableLiveData<>();
+        place_mut.setValue(place);
+
+        return place_mut;
+    }
+
+    public PlaceEntity getPlaceById_no_nut(int id){
+        return this.placeDao.getPlaceById(id);
+    }
 
     public void deleteAllPlaces(){placeDao.deleteAll();}
 

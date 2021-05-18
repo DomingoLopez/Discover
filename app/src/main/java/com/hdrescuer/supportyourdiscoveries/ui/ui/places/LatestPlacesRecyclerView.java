@@ -19,6 +19,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.ListItemClickListener;
 import com.hdrescuer.supportyourdiscoveries.common.MyApp;
+import com.hdrescuer.supportyourdiscoveries.common.ScreenSlidePagerAdapter;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace.NewPlaceDialogFragment;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace.ScreenSlidePageFragment;
@@ -154,42 +155,7 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
         }
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
 
-        int num_img;
-        ArrayList<String> paths_to_img;
-
-        public ScreenSlidePagerAdapter(FragmentActivity fa, ArrayList<String> img_paths) {
-            super(fa);
-            this.paths_to_img = new ArrayList<>();
-            if(img_paths.size() != 0) {
-                this.num_img = img_paths.size();
-            }else{
-                this.num_img = 1;
-            }
-
-            this.paths_to_img = img_paths;
-
-        }
-
-        @Override
-        public Fragment createFragment(int position) {
-
-            String path = "";
-            if(this.paths_to_img.size() == 0){
-                path = "default";
-            }else{
-                path = this.paths_to_img.get(position);
-            }
-
-            return new ScreenSlidePageFragment(path);
-        }
-
-        @Override
-        public int getItemCount() {
-            return num_img;
-        }
-    }
 
 
 }
