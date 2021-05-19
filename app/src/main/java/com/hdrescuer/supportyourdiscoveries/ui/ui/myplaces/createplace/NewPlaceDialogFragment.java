@@ -1,15 +1,23 @@
 package com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -21,6 +29,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.hdrescuer.supportyourdiscoveries.BuildConfig;
@@ -52,7 +67,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,11 +79,13 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class NewPlaceDialogFragment extends DialogFragment implements View.OnClickListener {
+public class NewPlaceDialogFragment extends DialogFragment implements View.OnClickListener, OnMapReadyCallback {
 
     ImageView img_place;
     ImageView btnAddPlace;
@@ -73,6 +93,9 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
     EditText title;
     EditText description;
+
+
+    TextView tvaddress;
 
     Button add_images;
     Button btn_geolocalizar;
@@ -98,13 +121,22 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
     private final int PICK_IMAGE = 100;
 
+    private Address address;
+    double latitud;
+    double longitud;
+    String address_street;
 
-    public NewPlaceDialogFragment(){
+
+    //Parámetros para Maps
+    FusedLocationProviderClient fusedLocationProviderClient;
+
+
+    public NewPlaceDialogFragment() {
 
 
     }
 
-    public NewPlaceDialogFragment(int place_id){
+    public NewPlaceDialogFragment(int place_id) {
 
         this.place_id = place_id;
 
@@ -119,6 +151,10 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
         this.myPlacesListViewModel = new ViewModelProvider(requireActivity()).get(MyPlacesListViewModel.class);
 
+        //Inicializamos el fusedLocationClient
+        this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+
+
     }
 
     @Nullable
@@ -127,11 +163,11 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_new_place_dialog,container, false);
+        View view = inflater.inflate(R.layout.fragment_new_place_dialog, container, false);
 
         findViews(view);
 
-        if(this.place_id != null){
+        if (this.place_id != null) {
             setFormValues();
         }
 
@@ -143,12 +179,12 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(this.img_paths.size() == 0)
+        if (this.img_paths.size() == 0)
             this.btn_delete_photo.setVisibility(View.INVISIBLE);
         else
             this.btn_delete_photo.setVisibility(View.VISIBLE);
 
-        this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(),this.img_paths));
+        this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(), this.img_paths));
 
 
     }
@@ -157,6 +193,9 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
         //ViewPager
         this.viewPager = view.findViewById(R.id.viewpager_img_gallery);
+
+        this.tvaddress = view.findViewById(R.id.tvAddress);
+
 
 
         this.btn_delete_photo = view.findViewById(R.id.btn_delete_photo);
@@ -167,7 +206,6 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         this.btn_geolocalizar.setOnClickListener(this);
 
 
-
         this.add_images = view.findViewById(R.id.btn_add_images);
         this.add_images.setOnClickListener(this);
 
@@ -176,7 +214,6 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
         this.btnClose = view.findViewById(R.id.btnClose);
         this.btnClose.setOnClickListener(this);
-
 
 
         this.title = view.findViewById(R.id.new_place_title);
@@ -191,9 +228,13 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         this.title.setText(placeEntity_to_update.title);
         this.img_paths = placeEntity_to_update.getPhoto_paths();
         this.description.setText(placeEntity_to_update.description);
+        this.tvaddress.setText(placeEntity_to_update.getAddress());
+        this.latitud = placeEntity_to_update.getLatitud();
+        this.longitud = placeEntity_to_update.getLongitud();
+        this.address_street = placeEntity_to_update.getAddress();
+
 
     }
-
 
 
     @Override
@@ -206,7 +247,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                 //Dialog para elegir entre cámara o galería
                 AlertDialog.Builder builder_chooser = new AlertDialog.Builder(this.getActivity());
                 LayoutInflater inflater = requireActivity().getLayoutInflater();
-                View viewDialog = inflater.inflate(R.layout.choose_gallery_photo,null);
+                View viewDialog = inflater.inflate(R.layout.choose_gallery_photo, null);
                 builder_chooser.setView(viewDialog);
                 builder_chooser.setMessage("¿Añadir desde galería o tomar instantánea?");
 
@@ -228,7 +269,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
                             Uri photoURI = FileProvider.getUriForFile(requireActivity().getApplicationContext(),
-                                    BuildConfig.APPLICATION_ID+".provider",
+                                    BuildConfig.APPLICATION_ID + ".provider",
                                     photoFile);
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -253,7 +294,6 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                 dialog_chooser.show();
 
 
-
                 break;
 
             case R.id.btnClose:
@@ -272,13 +312,13 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        int position =viewPager.getCurrentItem();
+                        int position = viewPager.getCurrentItem();
                         img_paths.remove(position);
 
-                        if(img_paths.size() == 0)
+                        if (img_paths.size() == 0)
                             btn_delete_photo.setVisibility(View.INVISIBLE);
 
-                        viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(),img_paths));
+                        viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(), img_paths));
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -296,15 +336,52 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             case R.id.btnAddPlace:
 
 
-                if(validateFields()) {
+                if (validateFields()) {
                     savePlaceToDB();
+                    getDialog().dismiss();
                 }
-                getDialog().dismiss();
+
                 break;
+
+            case R.id.btn_geolocalizar:
+
+                if(ActivityCompat.checkSelfPermission(this.getActivity().getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+
+                    fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+
+                                //Inicializamos location
+                                Location location = task.getResult();
+
+                                if(location != null){
+                                    try {
+                                        //Inicializamos Geocoder
+                                        Geocoder geocoder = new Geocoder(requireActivity(), Locale.getDefault());
+
+                                        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+                                        address = addresses.get(0);
+                                        longitud = address.getLongitude();
+                                        latitud = address.getLatitude();
+                                        address_street = address.getAddressLine(0);
+
+                                        tvaddress.setText(addresses.get(0).getAddressLine(0));
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                        }
+                    });
+                }else{
+                    ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
+                }
+                    break;
 
         }
 
     }
+
+
 
 
 
@@ -320,9 +397,9 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                     Constants.USERNAME,
                     this.img_paths,
                     Clock.systemUTC().instant().toString(),
-                    0.0,
-                    0.0,
-                    "Sin dirección");
+                    latitud,
+                    longitud,
+                    address_street);
 
             this.myPlacesListViewModel.updatePlace(placeEntity);
 
@@ -338,9 +415,9 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                     Constants.USERNAME,
                     this.img_paths,
                     Clock.systemUTC().instant().toString(),
-                    0.0,
-                    0.0,
-                    "Sin dirección"
+                    latitud,
+                    longitud,
+                    address_street
             ));
         }
 
@@ -388,6 +465,8 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             this.description.setError("Añade una descripción");
         else if(this.img_paths.size()==0)
             Toast.makeText(this.requireActivity(), "Debes añadir alguna foto del lugar", Toast.LENGTH_SHORT).show();
+        else if(this.address_street == null)
+            Toast.makeText(this.requireActivity(), "Debes Geolocalizar el lugar", Toast.LENGTH_SHORT).show();
         else
             valido = true;
 
@@ -454,8 +533,10 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         }
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
 
-
+    }
 
 
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {

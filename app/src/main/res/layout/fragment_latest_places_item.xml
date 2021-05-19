@@ -74,10 +74,12 @@
 
         <TextView
             android:id="@+id/latest_places_item_address"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
             android:text="TextView"
+            app:layout_constraintEnd_toStartOf="@+id/btn_go_place_details"
             app:layout_constraintStart_toStartOf="@+id/latest_places_item_title"
             app:layout_constraintTop_toBottomOf="@+id/latest_places_item_title" />
 
@@ -85,10 +87,11 @@
             android:id="@+id/btn_go_place_details"
             android:layout_width="56dp"
             android:layout_height="45dp"
-            android:layout_marginEnd="28dp"
+            android:layout_marginEnd="16dp"
             app:icon="@drawable/ic_baseline_play_arrow_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/latest_places_item_title" />
+            app:layout_constraintEnd_toEndOf="@+id/latest_places_item_title"
+            app:layout_constraintTop_toTopOf="@+id/ratingBarPlace" />
 
         <TextView
             android:id="@+id/tv_score"

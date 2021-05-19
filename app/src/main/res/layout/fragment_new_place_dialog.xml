@@ -37,7 +37,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="10dp"
         android:backgroundTint="@color/orange_solid"
         android:ems="10"
@@ -50,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_geolocalizar" />
+        app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
     <EditText
         android:id="@+id/new_place_description"
@@ -120,6 +120,16 @@
         app:icon="@drawable/ic_baseline_location_on_24"
         app:layout_constraintStart_toStartOf="@+id/btn_add_images"
         app:layout_constraintTop_toBottomOf="@+id/btn_add_images" />
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btn_geolocalizar"
+        app:layout_constraintTop_toBottomOf="@+id/btn_geolocalizar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
