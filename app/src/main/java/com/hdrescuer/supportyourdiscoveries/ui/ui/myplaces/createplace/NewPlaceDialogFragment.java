@@ -44,6 +44,7 @@ import com.hdrescuer.supportyourdiscoveries.common.Constants;
 import com.hdrescuer.supportyourdiscoveries.common.MyApp;
 import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.PlaceRepository;
+import com.hdrescuer.supportyourdiscoveries.db.entity.AddressShort;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 
 
@@ -109,6 +110,9 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     ArrayList<String> img_paths;
     String currentPhotoPath;
 
+    //Array de direcciones
+    ArrayList<AddressShort> address_paths;
+
     //ViewModel
     MyPlacesListViewModel myPlacesListViewModel;
 
@@ -121,10 +125,6 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
     private final int PICK_IMAGE = 100;
 
-    private Address address;
-    double latitud;
-    double longitud;
-    String address_street;
 
 
     //Parámetros para Maps
@@ -148,6 +148,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_SupportYourDiscoveries_FullScreenDialogStyle);
 
         this.img_paths = new ArrayList<>();
+        this.address_paths = new ArrayList<>();
 
         this.myPlacesListViewModel = new ViewModelProvider(requireActivity()).get(MyPlacesListViewModel.class);
 
@@ -184,7 +185,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         else
             this.btn_delete_photo.setVisibility(View.VISIBLE);
 
-        this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(), this.img_paths));
+        this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(), this.img_paths, this.address_paths));
 
 
     }
@@ -193,8 +194,6 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
         //ViewPager
         this.viewPager = view.findViewById(R.id.viewpager_img_gallery);
-
-        this.tvaddress = view.findViewById(R.id.tvAddress);
 
 
 
@@ -227,12 +226,9 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         this.placeEntity_to_update = this.myPlacesListViewModel.getPlaceDetails(this.place_id);
         this.title.setText(placeEntity_to_update.title);
         this.img_paths = placeEntity_to_update.getPhoto_paths();
+        this.address_paths = placeEntity_to_update.getAddress_paths();
         this.description.setText(placeEntity_to_update.description);
-        this.tvaddress.setText(placeEntity_to_update.getAddress());
-        this.latitud = placeEntity_to_update.getLatitud();
-        this.longitud = placeEntity_to_update.getLongitud();
-        this.address_street = placeEntity_to_update.getAddress();
-
+        this.address_paths = placeEntity_to_update.getAddress_paths();
 
     }
 
@@ -314,11 +310,12 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
                         int position = viewPager.getCurrentItem();
                         img_paths.remove(position);
+                        address_paths.remove(position);
 
                         if (img_paths.size() == 0)
                             btn_delete_photo.setVisibility(View.INVISIBLE);
 
-                        viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(), img_paths));
+                        viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(), img_paths, address_paths));
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -345,36 +342,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
             case R.id.btn_geolocalizar:
 
-                if(ActivityCompat.checkSelfPermission(this.getActivity().getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
-                    fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Location> task) {
-
-                                //Inicializamos location
-                                Location location = task.getResult();
-
-                                if(location != null){
-                                    try {
-                                        //Inicializamos Geocoder
-                                        Geocoder geocoder = new Geocoder(requireActivity(), Locale.getDefault());
-
-                                        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-                                        address = addresses.get(0);
-                                        longitud = address.getLongitude();
-                                        latitud = address.getLatitude();
-                                        address_street = address.getAddressLine(0);
-
-                                        tvaddress.setText(addresses.get(0).getAddressLine(0));
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                        }
-                    });
-                }else{
-                    ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
-                }
                     break;
 
         }
@@ -396,10 +364,9 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                     this.placeEntity_to_update.getRating(),
                     Constants.USERNAME,
                     this.img_paths,
-                    Clock.systemUTC().instant().toString(),
-                    latitud,
-                    longitud,
-                    address_street);
+                    this.address_paths,
+                    Clock.systemUTC().instant().toString()
+                    );
 
             this.myPlacesListViewModel.updatePlace(placeEntity);
 
@@ -414,10 +381,8 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                     0.0f,
                     Constants.USERNAME,
                     this.img_paths,
-                    Clock.systemUTC().instant().toString(),
-                    latitud,
-                    longitud,
-                    address_street
+                    this.address_paths,
+                    Clock.systemUTC().instant().toString()
             ));
         }
 
@@ -465,8 +430,6 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             this.description.setError("Añade una descripción");
         else if(this.img_paths.size()==0)
             Toast.makeText(this.requireActivity(), "Debes añadir alguna foto del lugar", Toast.LENGTH_SHORT).show();
-        else if(this.address_street == null)
-            Toast.makeText(this.requireActivity(), "Debes Geolocalizar el lugar", Toast.LENGTH_SHORT).show();
         else
             valido = true;
 
@@ -487,7 +450,11 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                     this.btn_delete_photo.setVisibility(View.VISIBLE);
 
                 this.img_paths.add(this.currentPhotoPath);
-                this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(),this.img_paths));
+
+
+
+                geolocaLiza();
+
 
 
             }
@@ -522,16 +489,45 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
 
                 this.img_paths.add(picturePath);
-                this.viewPager.setAdapter(new ScreenSlidePagerAdapter(this.getActivity(),this.img_paths));
 
-
-
-                Log.i("URI",""+picturePath);
+                geolocaLiza();
 
             }
 
         }
     }
+
+
+    void geolocaLiza(){
+        if(ActivityCompat.checkSelfPermission(this.getActivity().getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+
+                    //Inicializamos location
+                    Location location = task.getResult();
+
+                    if(location != null){
+                        try {
+                            //Inicializamos Geocoder
+                            Geocoder geocoder = new Geocoder(requireActivity(), Locale.getDefault());
+
+                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+                            address_paths.add(new AddressShort(addresses.get(0).getAddressLine(0),addresses.get(0).getLatitude(),addresses.get(0).getLongitude()));
+
+                            viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(),img_paths,address_paths));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }else{
+            ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},44);
+        }
+    }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -543,10 +539,12 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
         int num_img;
         ArrayList<String> paths_to_img;
+        ArrayList<AddressShort> paths_to_address;
 
-        public ScreenSlidePagerAdapter(FragmentActivity fa, ArrayList<String> img_paths) {
+        public ScreenSlidePagerAdapter(FragmentActivity fa, ArrayList<String> img_paths, ArrayList<AddressShort> address_paths) {
             super(fa);
             this.paths_to_img = new ArrayList<>();
+            this.paths_to_address = new ArrayList<>();
             if(img_paths.size() != 0) {
                 this.num_img = img_paths.size();
             }else{
@@ -554,6 +552,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             }
 
             this.paths_to_img = img_paths;
+            this.paths_to_address = address_paths;
 
         }
 
@@ -561,13 +560,16 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
         public Fragment createFragment(int position) {
 
             String path = "";
+            String address = "";
             if(this.paths_to_img.size() == 0){
                 path = "default";
+                address = "";
             }else{
                 path = this.paths_to_img.get(position);
+                address = this.paths_to_address.get(position).getAddress();
             }
 
-            return new ScreenSlidePageFragment(path);
+            return new ScreenSlidePageFragment(path,address);
         }
 
         @Override

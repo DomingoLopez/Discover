@@ -1,5 +1,7 @@
 package com.hdrescuer.supportyourdiscoveries.db.entity;
 
+import android.location.Address;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -17,23 +19,21 @@ public class PlaceEntity {
     float rating;
     public String author_name;
     public ArrayList<String> photo_paths;
+    public ArrayList<AddressShort> address_paths;
     public String instant;
-    double latitud;
-    double longitud;
-    String address;
 
 
-    public PlaceEntity(int id, String title, String description, float rating, String author_name, ArrayList<String> photo_paths, String instant, double latitud, double longitud, String address) {
+
+    public PlaceEntity(int id, String title, String description, float rating, String author_name, ArrayList<String> photo_paths, ArrayList<AddressShort> address_paths, String instant) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.rating = rating;
         this.author_name = author_name;
         this.photo_paths = photo_paths;
+        this.address_paths = address_paths;
         this.instant = instant;
-        this.latitud = latitud;
-        this.longitud = longitud;
-        this.address = address;
+
     }
 
 
@@ -93,27 +93,12 @@ public class PlaceEntity {
         this.instant = instant;
     }
 
-    public double getLatitud() {
-        return latitud;
+
+    public ArrayList<AddressShort> getAddress_paths() {
+        return address_paths;
     }
 
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
-    }
-
-    public double getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddress_paths(ArrayList<AddressShort> address_paths) {
+        this.address_paths = address_paths;
     }
 }

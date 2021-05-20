@@ -91,10 +91,9 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void loadData() {
-        this.viewpager.setAdapter(new ScreenSlidePagerAdapter(this,this.place.getPhoto_paths()));
+        this.viewpager.setAdapter(new ScreenSlidePagerAdapter(this,this.place.getPhoto_paths(),this.place.getAddress_paths()));
 
         this.title.setText(this.place.getTitle());
-        this.address.setText(this.place.getAddress());
         this.description.setText(this.place.getDescription());
 
     }

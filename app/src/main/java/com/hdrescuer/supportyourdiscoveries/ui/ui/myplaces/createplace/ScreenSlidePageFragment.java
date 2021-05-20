@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.hdrescuer.supportyourdiscoveries.R;
@@ -31,13 +32,15 @@ public class ScreenSlidePageFragment extends Fragment {
 
 
     private String img_path;
+    private String address;
 
     public ScreenSlidePageFragment() {
         // Required empty public constructor
     }
 
-    public ScreenSlidePageFragment(String img_path) {
+    public ScreenSlidePageFragment(String img_path, String address) {
         this.img_path = img_path;
+        this.address = address;
     }
 
     /**
@@ -74,13 +77,17 @@ public class ScreenSlidePageFragment extends Fragment {
         ViewGroup viewgroup = (ViewGroup) inflater.inflate(R.layout.fragment_img_gallery,container, false);
 
         ImageView img = viewgroup.findViewById(R.id.img_viewpager);
+        TextView address = viewgroup.findViewById(R.id.tv_viewpager);
 
         if(this.img_path.equals("default")){
+
+            address.setText(" ");
             Glide.with(this)
                     .load(R.mipmap.img_no_img_foreground)
                     .fitCenter()
                     .into(img);
         }else{
+            address.setText(this.address);
             Glide.with(this)
                     .load(this.img_path)
                     .fitCenter()

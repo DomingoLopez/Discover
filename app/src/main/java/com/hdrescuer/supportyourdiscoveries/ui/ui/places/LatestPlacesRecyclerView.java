@@ -66,9 +66,8 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
 
 
 
-            holder.viewPager.setAdapter(new ScreenSlidePagerAdapter(fa,holder.mItem.getPhoto_paths()));
+            holder.viewPager.setAdapter(new ScreenSlidePagerAdapter(fa,holder.mItem.getPhoto_paths(),holder.mItem.getAddress_paths()));
             holder.title.setText(holder.mItem.getTitle());
-            holder.address.setText(holder.mItem.getAddress());
             holder.score.setText(String.format("%.1f", holder.mItem.getRating()));
             holder.author_usename.setText(holder.mItem.getAuthor_name());
             holder.ratingBar.setRating(holder.mItem.getRating());
@@ -126,7 +125,6 @@ public class LatestPlacesRecyclerView extends RecyclerView.Adapter<LatestPlacesR
             mView = view;
 
             this.title = view.findViewById(R.id.latest_places_item_title);
-            this.address = view.findViewById(R.id.latest_places_item_address);
             this.score = view.findViewById(R.id.tv_score);
             this.viewPager = view.findViewById(R.id.viewPagerLatest);
             this.author_photo = view.findViewById(R.id.author_phot);

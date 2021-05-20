@@ -10,7 +10,7 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager_img_gallery"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -41,7 +41,7 @@
         android:layout_marginRight="10dp"
         android:backgroundTint="@color/orange_solid"
         android:ems="10"
-        android:hint="Título"
+        android:hint="Nombre de la Colección"
         android:inputType="text"
         android:nextFocusDown="@+id/new_place_description"
         android:textColor="@color/black"
@@ -50,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_geolocalizar" />
 
     <EditText
         android:id="@+id/new_place_description"
@@ -91,11 +91,10 @@
 
     <Button
         android:id="@+id/btn_add_images"
-        android:layout_width="wrap_content"
+        android:layout_width="57dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
-        android:text="Añadir imágenes"
         app:icon="@drawable/ic_baseline_add_a_photo_24"
         app:layout_constraintStart_toStartOf="@+id/viewpager_img_gallery"
         app:layout_constraintTop_toBottomOf="@+id/viewpager_img_gallery" />
@@ -112,24 +111,14 @@
 
     <Button
         android:id="@+id/btn_geolocalizar"
-        android:layout_width="wrap_content"
+        android:layout_width="57dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
         android:backgroundTint="@color/color_green"
-        android:text="Geolocalizar"
         app:icon="@drawable/ic_baseline_location_on_24"
-        app:layout_constraintStart_toStartOf="@+id/btn_add_images"
-        app:layout_constraintTop_toBottomOf="@+id/btn_add_images" />
-
-    <TextView
-        android:id="@+id/tvAddress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/btn_geolocalizar"
-        app:layout_constraintTop_toBottomOf="@+id/btn_geolocalizar" />
+        app:layout_constraintBottom_toBottomOf="@+id/btn_add_images"
+        app:layout_constraintStart_toEndOf="@+id/btn_add_images"
+        app:layout_constraintTop_toTopOf="@+id/btn_add_images" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

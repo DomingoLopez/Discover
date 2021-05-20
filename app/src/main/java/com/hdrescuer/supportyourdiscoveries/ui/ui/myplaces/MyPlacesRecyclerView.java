@@ -53,7 +53,6 @@ public class MyPlacesRecyclerView extends RecyclerView.Adapter<MyPlacesRecyclerV
             holder.mItem = mValues.get(position);
 
             holder.place_title.setText(holder.mItem.title);
-            holder.place_address.setText(holder.mItem.getAddress());
 
             ArrayList<String> img_paths = holder.mItem.getPhoto_paths();
             String path_principal = img_paths.get(0);
@@ -108,7 +107,6 @@ public class MyPlacesRecyclerView extends RecyclerView.Adapter<MyPlacesRecyclerV
 
             this.place_img = view.findViewById(R.id.my_place_img);
             this.place_title = view.findViewById(R.id.my_place_title);
-            this.place_address = view.findViewById(R.id.my_place_address);
 
             this.edit_place = view.findViewById(R.id.btn_edit_place);
             this.edit_place.setOnClickListener(this);

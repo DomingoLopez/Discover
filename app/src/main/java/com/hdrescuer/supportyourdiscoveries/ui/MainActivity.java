@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if(authorEntity != null && authorEntity.getPassword().equals(this.password.getText().toString())){
 
-                Constants.ID = authorEntity.getId();
+
                 Constants.USERNAME = authorEntity.getUsername();
                 Constants.EMAIL = authorEntity.getEmail();
                 Constants.PHOTO =  authorEntity.getMain_photo_url();
@@ -116,11 +116,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-        return valido;*/
+        return valido;
+*/
 
-        Constants.ID = 1;
         Constants.USERNAME = "domin";
-        Constants.EMAIL = "domin6891@gmail.com";
+        Constants.EMAIL = "domin";
         Constants.PHOTO =  "";
 
         return true;

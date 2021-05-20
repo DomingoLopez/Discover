@@ -51,7 +51,7 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPagerLatest"
             android:layout_width="0dp"
-            android:layout_height="250dp"
+            android:layout_height="300dp"
             android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,22 +64,11 @@
             style="?android:attr/ratingBarStyleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:isIndicator="true"
             android:numStars="5"
             android:progressTint="@color/golden"
             android:stepSize="0.1"
-            app:layout_constraintStart_toStartOf="@+id/latest_places_item_title"
-            app:layout_constraintTop_toBottomOf="@+id/latest_places_item_address" />
-
-        <TextView
-            android:id="@+id/latest_places_item_address"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toStartOf="@+id/btn_go_place_details"
             app:layout_constraintStart_toStartOf="@+id/latest_places_item_title"
             app:layout_constraintTop_toBottomOf="@+id/latest_places_item_title" />
 
@@ -89,7 +78,7 @@
             android:layout_height="45dp"
             android:layout_marginEnd="16dp"
             app:icon="@drawable/ic_baseline_play_arrow_24"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/ratingBarPlace"
             app:layout_constraintEnd_toEndOf="@+id/latest_places_item_title"
             app:layout_constraintTop_toTopOf="@+id/ratingBarPlace" />
 
