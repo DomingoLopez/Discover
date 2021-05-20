@@ -34,6 +34,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
@@ -46,6 +47,9 @@ import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.PlaceRepository;
 import com.hdrescuer.supportyourdiscoveries.db.entity.AddressShort;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
+import com.schibstedspain.leku.LocationPicker;
+import com.schibstedspain.leku.LocationPickerActivity;
+import com.schibstedspain.leku.locale.SearchZoneRect;
 
 
 import android.os.Bundle;
@@ -120,12 +124,13 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
     Integer place_id;
 
     PlaceEntity placeEntity_to_update;
+    int address_position_to_update;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private final int PICK_IMAGE = 100;
 
-
+    private final int PICK_PLACE_CODE = 245;
 
     //Parámetros para Maps
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -342,6 +347,34 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
 
             case R.id.btn_geolocalizar:
 
+                if(address_paths.isEmpty()){
+                    Toast.makeText(requireActivity(), "Antes de modificar una dirección debe tomar una foto del sitio", Toast.LENGTH_SHORT).show();
+                }else{
+                    this.address_position_to_update = viewPager.getCurrentItem();
+                    AddressShort addressShort = this.address_paths.get(address_position_to_update);
+
+                    Intent locationPickerIntent = new LocationPickerActivity.Builder()
+                            .withLocation(addressShort.getLatitud(), addressShort.getLongitud())
+                            .withGeolocApiKey("${MAPS_API_KEY}")
+                            .withSearchZone("es_ES")
+                            .withSearchZone(new SearchZoneRect(new LatLng(addressShort.getLatitud()-15, addressShort.getLongitud()-15),
+                                                               new LatLng(addressShort.getLatitud()+5, addressShort.getLongitud()+5)))
+                            .withDefaultLocaleSearchZone()
+                            .shouldReturnOkOnBackPressed()
+                            //.withStreetHidden()
+                            //.withCityHidden()
+                            //.withZipCodeHidden()
+                            .withSatelliteViewHidden()
+                            .withGoogleTimeZoneEnabled()
+                            .withVoiceSearchHidden()
+                            .withUnnamedRoadHidden()
+                            .build(requireActivity());
+
+                    startActivityForResult(locationPickerIntent, PICK_PLACE_CODE);
+                }
+
+
+
 
                     break;
 
@@ -493,6 +526,29 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                 geolocaLiza();
 
             }
+
+        }else if(requestCode == PICK_PLACE_CODE){
+
+            double latitude = data.getDoubleExtra("latitude", 0.0);
+            double longitude = data.getDoubleExtra("longitude", 0.0);
+            String address = data.getStringExtra("location_address");
+
+            String parts [] = address.split(",");
+            String result_address = "";
+
+            for(int i = 0; i < parts.length; i++){
+                if(i == parts.length -2){
+                    result_address+=parts[i];
+                }
+                if(i != parts.length -1){
+                    result_address+=parts[i];
+                    result_address+=", ";
+                }
+            }
+
+
+            this.address_paths.set(this.address_position_to_update,new AddressShort(address,latitude,longitude));
+            this.viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(),img_paths,address_paths));
 
         }
     }

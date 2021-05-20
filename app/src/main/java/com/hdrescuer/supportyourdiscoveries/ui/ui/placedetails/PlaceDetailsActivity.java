@@ -21,6 +21,7 @@ import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.ScreenSlidePagerAdapter;
 import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.data.PlaceDetailsViewModel;
+import com.hdrescuer.supportyourdiscoveries.db.entity.AuthorPlaceValorationEntity;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace.ScreenSlidePageFragment;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.places.LatestPlacesRecyclerView;
@@ -34,14 +35,17 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
     TextView title;
     TextView address;
     TextView description;
+    TextView vote;
     ViewPager2 viewpager;
 
     Button btnMaps;
     RatingBar ratingBar;
 
     PlaceDetailsViewModel placeDetailsViewModel;
+
     int id;
     PlaceEntity place;
+    AuthorPlaceValorationEntity authorPlaceValorationEntity;
 
 
 
@@ -87,7 +91,18 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
+        this.placeDetailsViewModel.authorPlaceValoration.observe(this, new Observer<AuthorPlaceValorationEntity>() {
+            @Override
+            public void onChanged(AuthorPlaceValorationEntity authplace_ent) {
+
+                authorPlaceValorationEntity = authplace_ent;
+
+            }
+        });
+
+
         this.place = this.placeDetailsViewModel.place.getValue();
+        this.authorPlaceValorationEntity = this.placeDetailsViewModel.authorPlaceValoration.getValue();
     }
 
     private void loadData() {
@@ -95,6 +110,12 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
 
         this.title.setText(this.place.getTitle());
         this.description.setText(this.place.getDescription());
+
+        if(!this.authorPlaceValorationEntity.isVisited()){
+            this.vote.setText("Aún no has visitado este lugar. ¡Llega hasta el lugar para valorarlo!");
+        }else{
+            this.vote.setText("¿Qué te parece el lugar visitado?");
+        }
 
     }
 
@@ -108,9 +129,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
         this.viewpager = findViewById(R.id.viewPagerDetails);
         this.btnMaps = findViewById(R.id.btnMaps);
         this.ratingBar = findViewById(R.id.ratingBarPlace);
-
-
-
+        this.vote = findViewById(R.id.tvVoteThisPlace);
 
         this.btnBack.setOnClickListener(this);
 
