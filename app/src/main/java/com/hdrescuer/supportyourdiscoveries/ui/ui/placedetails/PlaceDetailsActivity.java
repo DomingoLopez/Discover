@@ -111,7 +111,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
         this.title.setText(this.place.getTitle());
         this.description.setText(this.place.getDescription());
 
-        if(!this.authorPlaceValorationEntity.isVisited()){
+        if(this.authorPlaceValorationEntity!= null && !this.authorPlaceValorationEntity.isVisited()){
             this.vote.setText("Aún no has visitado este lugar. ¡Llega hasta el lugar para valorarlo!");
         }else{
             this.vote.setText("¿Qué te parece el lugar visitado?");

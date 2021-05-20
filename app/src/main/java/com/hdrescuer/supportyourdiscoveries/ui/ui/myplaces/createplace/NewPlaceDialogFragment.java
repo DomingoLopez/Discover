@@ -528,28 +528,28 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
             }
 
         }else if(requestCode == PICK_PLACE_CODE){
+            if(resultCode == RESULT_OK ) {
+                double latitude = data.getDoubleExtra("latitude", 0.0);
+                double longitude = data.getDoubleExtra("longitude", 0.0);
+                String address = data.getStringExtra("location_address");
 
-            double latitude = data.getDoubleExtra("latitude", 0.0);
-            double longitude = data.getDoubleExtra("longitude", 0.0);
-            String address = data.getStringExtra("location_address");
+                String parts[] = address.split(",");
+                String result_address = "";
 
-            String parts [] = address.split(",");
-            String result_address = "";
+                for (int i = 0; i < parts.length; i++) {
+                    if (i == parts.length - 2) {
+                        result_address += parts[i];
+                    } else if (i != parts.length - 1) {
+                        result_address += parts[i];
+                        result_address += ", ";
+                    }
 
-            for(int i = 0; i < parts.length; i++){
-                if(i == parts.length -2){
-                    result_address+=parts[i];
                 }
-                if(i != parts.length -1){
-                    result_address+=parts[i];
-                    result_address+=", ";
-                }
+
+                this.address_paths.set(this.address_position_to_update, new AddressShort(result_address, latitude, longitude));
+                this.viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(), img_paths, address_paths));
+
             }
-
-
-            this.address_paths.set(this.address_position_to_update,new AddressShort(address,latitude,longitude));
-            this.viewPager.setAdapter(new ScreenSlidePagerAdapter(getActivity(),img_paths,address_paths));
-
         }
     }
 
