@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -124,7 +126,6 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
     private void findViews() {
         this.btnBack = findViewById(R.id.backDetails);
         this.title = findViewById(R.id.titleDetails);
-        this.address = findViewById(R.id.addressDetails);
         this.description = findViewById(R.id.detailsDescription);
         this.viewpager = findViewById(R.id.viewPagerDetails);
         this.btnMaps = findViewById(R.id.btnMaps);
@@ -132,6 +133,8 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
         this.vote = findViewById(R.id.tvVoteThisPlace);
 
         this.btnBack.setOnClickListener(this);
+
+        this.btnMaps.setOnClickListener(this);
 
     }
 
@@ -145,6 +148,21 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
             case R.id.backDetails:
 
                 finish();
+
+                break;
+
+            case R.id.btnMaps:
+
+                int position = this.viewpager.getCurrentItem();
+                String latitud = Double.toString(this.place.getAddress_paths().get(position).getLatitud());
+                String longitud = Double.toString(this.place.getAddress_paths().get(position).getLongitud());
+
+                String action = "google.navigation:q="+latitud+","+longitud+"&mode=w";
+
+                Uri gmmIntentUri = Uri.parse(action);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
 
                 break;
         }
