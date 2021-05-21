@@ -350,31 +350,47 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                 if(address_paths.isEmpty()){
                     Toast.makeText(requireActivity(), "Antes de modificar una dirección debe tomar una foto del sitio", Toast.LENGTH_SHORT).show();
                 }else{
-                    this.address_position_to_update = viewPager.getCurrentItem();
-                    AddressShort addressShort = this.address_paths.get(address_position_to_update);
 
-                    Intent locationPickerIntent = new LocationPickerActivity.Builder()
-                            .withLocation(addressShort.getLatitud(), addressShort.getLongitud())
-                            .withGeolocApiKey("${MAPS_API_KEY}")
-                            .withSearchZone("es_ES")
-                            .withSearchZone(new SearchZoneRect(new LatLng(addressShort.getLatitud()-15, addressShort.getLongitud()-15),
-                                                               new LatLng(addressShort.getLatitud()+5, addressShort.getLongitud()+5)))
-                            .withDefaultLocaleSearchZone()
-                            .shouldReturnOkOnBackPressed()
-                            //.withStreetHidden()
-                            //.withCityHidden()
-                            //.withZipCodeHidden()
-                            .withSatelliteViewHidden()
-                            .withGoogleTimeZoneEnabled()
-                            .withVoiceSearchHidden()
-                            .withUnnamedRoadHidden()
-                            .build(requireActivity());
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(this.getActivity());
 
-                    startActivityForResult(locationPickerIntent, PICK_PLACE_CODE);
+                    builder1.setMessage("¿Desea cambiar la ubicación de la foto actual?");
+
+                    builder1.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            address_position_to_update = viewPager.getCurrentItem();
+                            AddressShort addressShort = address_paths.get(address_position_to_update);
+
+                            Intent locationPickerIntent = new LocationPickerActivity.Builder()
+                                    .withLocation(addressShort.getLatitud(), addressShort.getLongitud())
+                                    .withGeolocApiKey("${MAPS_API_KEY}")
+                                    .withSearchZone("es_ES")
+                                    .withSearchZone(new SearchZoneRect(new LatLng(addressShort.getLatitud()-15, addressShort.getLongitud()-15),
+                                            new LatLng(addressShort.getLatitud()+5, addressShort.getLongitud()+5)))
+                                    .withDefaultLocaleSearchZone()
+                                    .shouldReturnOkOnBackPressed()
+                                    //.withStreetHidden()
+                                    //.withCityHidden()
+                                    //.withZipCodeHidden()
+                                    .withSatelliteViewHidden()
+                                    .withGoogleTimeZoneEnabled()
+                                    .withVoiceSearchHidden()
+                                    .withUnnamedRoadHidden()
+                                    .build(requireActivity());
+
+                            startActivityForResult(locationPickerIntent, PICK_PLACE_CODE);
+                        }
+                    });
+                    builder1.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+
+                    AlertDialog dialog1 = builder1.create();
+                    dialog1.show();
+
                 }
-
-
-
 
                     break;
 

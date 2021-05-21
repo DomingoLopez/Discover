@@ -43,8 +43,8 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerDetails"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,14 +52,14 @@
 
     <RatingBar
         android:id="@+id/ratingBarPlace"
-        style="?android:attr/ratingBarStyleIndicator"
+        style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
-        android:isIndicator="true"
+        android:isIndicator="false"
         android:numStars="5"
         android:progressTint="@color/golden"
-        android:stepSize="0.1"
+        android:stepSize="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -90,11 +90,13 @@
 
     <TextView
         android:id="@+id/tvVoteThisPlace"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="36dp"
         android:text="Valora este lugar"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/ratingBarPlace"
         app:layout_constraintEnd_toEndOf="@+id/ratingBarPlace"
+        app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="@+id/ratingBarPlace" />
 </androidx.constraintlayout.widget.ConstraintLayout>

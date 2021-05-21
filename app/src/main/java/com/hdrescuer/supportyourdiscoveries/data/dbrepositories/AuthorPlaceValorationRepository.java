@@ -45,7 +45,7 @@ public class AuthorPlaceValorationRepository {
         new insertAuthorPlaceValorationAsyncTask(authorPlaceValorationDao).execute(authorPlaceValorationEntity);
     }
 
-    public void updateAuthor(AuthorPlaceValorationEntity authorPlaceValorationEntity){
+    public void updateAuthorPlaceValoration(AuthorPlaceValorationEntity authorPlaceValorationEntity){
         new updateAuthorPlaceValorationAsyncTask(authorPlaceValorationDao).execute(authorPlaceValorationEntity);
     }
 

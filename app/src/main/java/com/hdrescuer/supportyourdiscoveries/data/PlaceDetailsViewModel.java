@@ -12,8 +12,6 @@ import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.PlaceRepository;
 import com.hdrescuer.supportyourdiscoveries.db.entity.AuthorPlaceValorationEntity;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 
-import java.util.List;
-
 public class PlaceDetailsViewModel extends ViewModel {
 
     private PlaceRepository placeRepository;
@@ -46,6 +44,22 @@ public class PlaceDetailsViewModel extends ViewModel {
             authorPlaceValoration = new MutableLiveData<>();
 
         return this.authorPlaceValorationRepository.getAuthorPlaceValoration(Constants.USERNAME,this.id);
+    }
+
+    public void insertValoration(AuthorPlaceValorationEntity authorPlaceValorationEntity){
+        this.authorPlaceValorationRepository.insertAuthorPlaceValoration(authorPlaceValorationEntity);
+
+        this.authorPlaceValoration.setValue(authorPlaceValorationEntity);
+
+        //Falta hacer un update en el placeRepository de la valoración del usuario sumando la media y eso
+    }
+
+    public void updateValoration(AuthorPlaceValorationEntity authorPlaceValorationEntity){
+        this.authorPlaceValorationRepository.updateAuthorPlaceValoration(authorPlaceValorationEntity);
+
+        this.authorPlaceValoration.setValue(authorPlaceValorationEntity);
+
+        //Falta hacer un update en el placeRepository de la valoración del usuario sumando la media y eso
     }
 
 
