@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.Constants;
+import com.hdrescuer.supportyourdiscoveries.common.SessionManager;
 import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.AuthorRepository;
 import com.hdrescuer.supportyourdiscoveries.db.entity.AuthorEntity;
 
@@ -24,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     TextView tvlogin;
 
     AuthorRepository authorRepository;
-
+    SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         getSupportActionBar().hide();
         this.authorRepository = new AuthorRepository(getApplication());
-
+        session = new SessionManager(this);
         findViews();
         events();
     }
@@ -72,6 +73,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Constants.USERNAME = username.getText().toString();
                     Constants.EMAIL = email.getText().toString();
                     Constants.PHOTO = "";
+
+                    session.setLogin(true);
+                    session.setInitials(Constants.USERNAME,Constants.EMAIL,Constants.PHOTO);
 
                     Intent i_register = new Intent(RegisterActivity.this, HomeActivity.class);
                     startActivity(i_register);

@@ -26,4 +26,7 @@ public interface AuthorPlaceValorationDao {
     @Query("SELECT * FROM AUTHORPLACEVALORATION WHERE username = :username AND place_id = :place_id")
     AuthorPlaceValorationEntity getAuthorPlaceValoration(String username, int place_id);
 
+    @Query("SELECT AVG(valoration) FROM AUTHORPLACEVALORATION WHERE place_id = :place_id")
+    float getAVGValoration(int place_id);
+
 }

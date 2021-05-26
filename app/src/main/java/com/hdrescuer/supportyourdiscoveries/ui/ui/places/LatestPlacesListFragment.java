@@ -98,10 +98,8 @@ public class LatestPlacesListFragment extends Fragment implements ListItemClickL
     @Override
     public void onResume() {
         super.onResume();
-        if(!alreadyCreated){
-
-        }
-        alreadyCreated = false;
+        placeList = this.latestPlacesListViewModel.getAllPlaces().getValue();
+        adapter.setData(placeList);
     }
 
 

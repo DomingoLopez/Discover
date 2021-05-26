@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.hdrescuer.supportyourdiscoveries.common.Constants;
 import com.hdrescuer.supportyourdiscoveries.db.DiscoveriesDataBase;
 import com.hdrescuer.supportyourdiscoveries.db.dao.PlaceDao;
+import com.hdrescuer.supportyourdiscoveries.db.entity.AuthorPlaceValorationEntity;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
 
 import java.util.ArrayList;
@@ -91,6 +92,8 @@ public class PlaceRepository{
         refreshPlaces(place,"UPDATE");
     }
 
+
+
     public int getMaxId(){
         return placeDao.getMaxId();
     }
@@ -148,13 +151,14 @@ public class PlaceRepository{
                 break;
 
             case "UPDATE":
-                ArrayList<PlaceEntity> tmp1 = (ArrayList<PlaceEntity>) this.places.getValue();
+                if(places != null) {
+                    ArrayList<PlaceEntity> tmp1 = (ArrayList<PlaceEntity>) this.places.getValue();
 
-                for(int i = 0; i< tmp1.size(); i++)
-                    if(tmp1.get(i).getId() == placeEntity.getId())
-                        tmp1.set(i,placeEntity);
-                this.places.setValue(tmp1);
-
+                    for (int i = 0; i < tmp1.size(); i++)
+                        if (tmp1.get(i).getId() == placeEntity.getId())
+                            tmp1.set(i, placeEntity);
+                    this.places.setValue(tmp1);
+                }
                 break;
 
             case "DELETE":
@@ -171,6 +175,19 @@ public class PlaceRepository{
 
 
         }
+    }
+
+
+    public int getNumVisited(String username){
+        return Math.round(this.placeDao.getNumVisisted(username));
+    }
+
+    public double getAVGValorationUser(String username){
+        return this.placeDao.getAVGValorationUser(username);
+    }
+
+    public int getPublished(String username){
+        return this.placeDao.getPublished(username);
     }
 
 }

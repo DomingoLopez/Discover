@@ -21,12 +21,20 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Query;
 
 import com.bumptech.glide.Glide;
 import com.hdrescuer.supportyourdiscoveries.BuildConfig;
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.Constants;
+import com.hdrescuer.supportyourdiscoveries.common.SessionManager;
+import com.hdrescuer.supportyourdiscoveries.data.MyPlacesListViewModel;
 import com.hdrescuer.supportyourdiscoveries.data.ProfileViewModel;
+import com.hdrescuer.supportyourdiscoveries.db.entity.AuthorEntity;
+import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
+import com.hdrescuer.supportyourdiscoveries.ui.HomeActivity;
+import com.hdrescuer.supportyourdiscoveries.ui.MainActivity;
+import com.hdrescuer.supportyourdiscoveries.ui.RegisterActivity;
 import com.hdrescuer.supportyourdiscoveries.ui.ui.myplaces.createplace.NewPlaceDialogFragment;
 
 import org.w3c.dom.Text;
@@ -35,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -46,12 +55,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     ImageView profileImage;
     TextView username;
     Button btn_edit_profile;
+    Button btn_logout;
 
     TextView visited;
     TextView published;
     TextView ratingUser;
 
     String currentPhotoPath;
+
+    private SessionManager session;
+
+    MyPlacesListViewModel latestPlacesListViewModel;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -66,8 +80,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-
+        session = new SessionManager(requireActivity());
         findViews(view);
+        this.latestPlacesListViewModel = new ViewModelProvider(getActivity()).get(MyPlacesListViewModel.class);
         loadUserData();
 
 
@@ -81,14 +96,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         this.profileImage = view.findViewById(R.id.imageProfile);
         this.username = view.findViewById(R.id.tvUsernameProfile);
         this.btn_edit_profile = view.findViewById(R.id.btn_edit_profile);
-
+        this.btn_logout = view.findViewById(R.id.btn_logout);
 
         this.visited = view.findViewById(R.id.tvVisited);
         this.published = view.findViewById(R.id.tvPublished);
         this.ratingUser = view.findViewById(R.id.tvRatingUser);
 
         this.btn_edit_profile.setOnClickListener(this);
-
+        this.btn_logout.setOnClickListener(this);
 
 
 
@@ -98,12 +113,24 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         this.username.setText(Constants.USERNAME);
         this.currentPhotoPath = "";
 
+
         Glide.with(this)
                 .load(Constants.PHOTO)
                 .fitCenter()
                 .circleCrop()
                 .error(R.mipmap.img_no_img_foreground)
                 .into(this.profileImage);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        this.visited.setText(Integer.toString(this.latestPlacesListViewModel.getNumVisited(Constants.USERNAME)));
+        this.ratingUser.setText(Double.toString(this.latestPlacesListViewModel.getAVGValorationUser(Constants.USERNAME)));
+        this.published.setText(Integer.toString(this.latestPlacesListViewModel.getPublished(Constants.USERNAME)));
+
+
     }
 
     @Override
@@ -162,6 +189,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 dialog_chooser.show();
 
                 break;
+
+            case R.id.btn_logout:
+                Constants.USERNAME = "";
+                Constants.PHOTO = "";
+                Constants.ID = 0;
+                Constants.EMAIL = "";
+
+                session.setLogin(false);
+
+                Intent i = new Intent(requireActivity(), MainActivity.class);
+                startActivity(i);
+                requireActivity().finish();
+
+                break;
         }
     }
 
@@ -197,6 +238,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         .error(R.mipmap.img_no_img_foreground)
                         .into(this.profileImage);
 
+                AuthorEntity authorEntity = this.profileViewModel.getAuthorByUsername(Constants.USERNAME);
+                authorEntity.setMain_photo_url(this.currentPhotoPath);
+                this.profileViewModel.updateAuthor(authorEntity);
+
             }
         }else if (requestCode == PICK_IMAGE){
             if(resultCode == RESULT_OK ){
@@ -218,7 +263,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         .error(R.mipmap.img_no_img_foreground)
                         .into(this.profileImage);
 
-
+                AuthorEntity authorEntity = this.profileViewModel.getAuthorByUsername(Constants.USERNAME);
+                authorEntity.setMain_photo_url(picturePath);
+                this.profileViewModel.updateAuthor(authorEntity);
 
             }
 

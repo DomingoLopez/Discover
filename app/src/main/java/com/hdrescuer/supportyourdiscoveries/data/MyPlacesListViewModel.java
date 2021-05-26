@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.hdrescuer.supportyourdiscoveries.common.Constants;
 import com.hdrescuer.supportyourdiscoveries.common.MyApp;
 import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.PlaceRepository;
 import com.hdrescuer.supportyourdiscoveries.db.entity.PlaceEntity;
@@ -51,6 +52,17 @@ public class MyPlacesListViewModel extends ViewModel {
         return this.placeRepository.getPlaceById_no_nut(id);
     }
 
+    public int getNumVisited(String username){
+        return this.placeRepository.getNumVisited(username);
+    }
+
+    public double getAVGValorationUser(String username){
+        return this.placeRepository.getAVGValorationUser(username);
+    }
+
+    public int getPublished(String username){
+        return this.placeRepository.getPublished(username);
+    }
 
 
 

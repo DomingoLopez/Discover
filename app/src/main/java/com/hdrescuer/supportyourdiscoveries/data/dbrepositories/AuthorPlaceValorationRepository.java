@@ -49,6 +49,11 @@ public class AuthorPlaceValorationRepository {
         new updateAuthorPlaceValorationAsyncTask(authorPlaceValorationDao).execute(authorPlaceValorationEntity);
     }
 
+
+    public float getAVGValoration(int place_id){
+        return this.authorPlaceValorationDao.getAVGValoration(place_id);
+    }
+
     private static class insertAuthorPlaceValorationAsyncTask extends AsyncTask<AuthorPlaceValorationEntity, Void, Void> {
 
         private AuthorPlaceValorationDao authorPlaceValorationDaoAsyncTask;

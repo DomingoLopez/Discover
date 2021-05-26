@@ -13,8 +13,11 @@ import android.widget.Toast;
 
 import com.hdrescuer.supportyourdiscoveries.R;
 import com.hdrescuer.supportyourdiscoveries.common.Constants;
+import com.hdrescuer.supportyourdiscoveries.common.SessionManager;
 import com.hdrescuer.supportyourdiscoveries.data.dbrepositories.AuthorRepository;
 import com.hdrescuer.supportyourdiscoveries.db.entity.AuthorEntity;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText password;
     TextView register;
     Button login;
+    private SessionManager session;
 
     AuthorRepository authorRepository;
 
@@ -32,6 +36,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
+
+
+        session = new SessionManager(getApplicationContext());
+        if(session.isLoggedIn()){
+            ArrayList<String> tmp = session.getInitials();
+            Constants.USERNAME = tmp.get(0);
+            Constants.EMAIL = tmp.get(1);
+            Constants.PHOTO = tmp.get(2);
+
+
+            Intent i = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(i);
+            finish();
+        }
 
         this.authorRepository = new AuthorRepository(getApplication());
 
@@ -93,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     boolean validateForm(){
 
-        /*boolean valido = false;
+        boolean valido = false;
 
         if(this.username.getText().toString().isEmpty())
             this.username.setError("Nombre de usuario requerido");
@@ -110,6 +128,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Constants.USERNAME = authorEntity.getUsername();
                 Constants.EMAIL = authorEntity.getEmail();
                 Constants.PHOTO =  authorEntity.getMain_photo_url();
+
+                session.setLogin(true);
+                session.setInitials(Constants.USERNAME,Constants.EMAIL,Constants.PHOTO);
+
                 valido = true;
             }
 
@@ -117,12 +139,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         return valido;
-*/
 
-        Constants.USERNAME = "domin";
+        /*Constants.USERNAME = "domin";
         Constants.EMAIL = "domin";
         Constants.PHOTO =  "";
 
-        return true;
+        return true;*/
     }
 }

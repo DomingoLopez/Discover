@@ -51,7 +51,12 @@ public class PlaceDetailsViewModel extends ViewModel {
 
         this.authorPlaceValoration.setValue(authorPlaceValorationEntity);
 
-        //Falta hacer un update en el placeRepository de la valoración del usuario sumando la media y eso
+
+        PlaceEntity placeEntity_val = place.getValue();
+        float actualRating = this.authorPlaceValorationRepository.getAVGValoration(placeEntity_val.getId());
+        placeEntity_val.setRating(actualRating);
+        this.placeRepository.updatePlace(placeEntity_val);
+        this.place.setValue(placeEntity_val);
     }
 
     public void updateValoration(AuthorPlaceValorationEntity authorPlaceValorationEntity){

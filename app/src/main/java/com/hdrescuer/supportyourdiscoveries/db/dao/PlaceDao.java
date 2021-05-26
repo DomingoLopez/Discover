@@ -37,5 +37,14 @@ public interface PlaceDao {
     @Query("SELECT MAX(id) FROM PLACE")
     int getMaxId();
 
+    @Query("SELECT COUNT(*) FROM AUTHORPLACEVALORATION WHERE username = :username AND visited = 1")
+    int getNumVisisted(String username);
+
+    @Query("SELECT (AVG(RATING)) FROM place WHERE author_name = :username")
+    double getAVGValorationUser(String username);
+
+    @Query("SELECT COUNT(*) FROM place WHERE author_name = :username")
+    int getPublished(String username);
+
 
 }
