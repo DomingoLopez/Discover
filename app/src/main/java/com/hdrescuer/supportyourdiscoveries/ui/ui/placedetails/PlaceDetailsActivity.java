@@ -128,7 +128,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
                                     ratingBar.setIsIndicator(true);
                                     canIVote = false;
                                 } else {
-                                    vote.setText("¿Qué te parece el luga? Estás a menos de 500 metros");
+                                    vote.setText("¿Qué te parece el luga? Estás a menos de 200 metros");
                                     ratingBar.setIsIndicator(false);
                                     canIVote = true;
                                 }
@@ -143,7 +143,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements View.OnCl
                                     ratingBar.setIsIndicator(true);
                                     canIVote = false;
                                 } else {
-                                    vote.setText("¿Qué te parece el lugar? Estás a menos de 500 metros");
+                                    vote.setText("¿Qué te parece el lugar? Estás a menos de 200 metros");
                                     ratingBar.setIsIndicator(false);
                                     canIVote = true;
                                 }

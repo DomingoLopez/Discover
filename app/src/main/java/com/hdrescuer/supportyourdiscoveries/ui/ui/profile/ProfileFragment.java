@@ -41,6 +41,7 @@ import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +67,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private SessionManager session;
 
     MyPlacesListViewModel latestPlacesListViewModel;
+
+    private static DecimalFormat df2 = new DecimalFormat("#.#");
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -127,7 +130,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         super.onResume();
 
         this.visited.setText(Integer.toString(this.latestPlacesListViewModel.getNumVisited(Constants.USERNAME)));
-        this.ratingUser.setText(Double.toString(this.latestPlacesListViewModel.getAVGValorationUser(Constants.USERNAME)));
+        this.ratingUser.setText(df2.format(this.latestPlacesListViewModel.getAVGValorationUser(Constants.USERNAME)));
         this.published.setText(Integer.toString(this.latestPlacesListViewModel.getPublished(Constants.USERNAME)));
 
 
