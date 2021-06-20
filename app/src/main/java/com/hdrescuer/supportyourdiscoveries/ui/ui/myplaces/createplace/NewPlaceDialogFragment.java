@@ -512,22 +512,7 @@ public class NewPlaceDialogFragment extends DialogFragment implements View.OnCli
                 if(this.btn_delete_photo.getVisibility() == View.INVISIBLE)
                     this.btn_delete_photo.setVisibility(View.VISIBLE);
 
-/*
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(requireActivity().getApplicationContext(),
-                            BuildConfig.APPLICATION_ID+".provider",
-                            photoFile);
 
-
-                }
-*/
                 Uri selectedImage = data.getData();
                 String[] filePath = { MediaStore.Images.Media.DATA };
                 Cursor c = requireActivity().getContentResolver().query(selectedImage,filePath, null, null, null);

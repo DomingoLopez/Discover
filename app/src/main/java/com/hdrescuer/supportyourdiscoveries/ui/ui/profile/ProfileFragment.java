@@ -234,6 +234,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             if(resultCode == RESULT_OK){
 
                 Constants.PHOTO = this.currentPhotoPath;
+                session.updatePhoto(this.currentPhotoPath);
                 Glide.with(this)
                         .load(this.currentPhotoPath)
                         .fitCenter()
@@ -259,6 +260,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
                 Constants.PHOTO = picturePath;
+                session.updatePhoto(picturePath);
                 Glide.with(this)
                         .load(picturePath)
                         .fitCenter()

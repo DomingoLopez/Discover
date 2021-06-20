@@ -60,4 +60,9 @@ public class SessionManager {
 
         return  tmp;
     }
+
+    public void updatePhoto(String photo){
+        editor.putString("PHOTO",photo);
+        editor.commit();
+    }
 }
